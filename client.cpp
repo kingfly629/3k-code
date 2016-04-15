@@ -48,7 +48,7 @@ int getIpbyHostName(char *ip) {
             for (; *pptr != NULL; pptr++)
                 printf(" address:%s\n",
                     inet_ntop(hptr->h_addrtype, *pptr, str, sizeof (str)));
-            ip = (char *)inet_ntop(hptr->h_addrtype, hptr->h_addr, str, sizeof (str));
+            ip = (char *) inet_ntop(hptr->h_addrtype, hptr->h_addr, str, sizeof (str));
             //应该需要拷贝？？
             if (ip == NULL) {
                 return -3;
@@ -76,19 +76,19 @@ void *onread(void *args) {
         if (recv_len < 0) {
             cout << "recv error!" << endl;
             perror("recv_len < 0");
-            continue;
+            exit(-1);
         } else if (recv_len == 0) {
             //-2- 对端关闭
             cout << "peer dis-connnect fd=" << conn_fd << endl;
+            shutdown(conn_fd, SHUT_RDWR); //0 succ
             close(conn_fd);
             perror("recv_len = 0");
-            continue;
+            exit(-2);
         }
         int body_len = atoi(msg);
         if (body_len < 0) {
             perror("head length < 0");
-            usleep(5);
-            continue;
+            exit(-3);
         } else {
             cout << "recv head succ(fd=" << conn_fd << ") body_len:" << body_len << endl;
         }
@@ -105,10 +105,11 @@ void *onread(void *args) {
                   break;
                   }*/
                 perror("recv_len < 0");
-                break;
+                exit(-3);
             } else if (recv_len == 0) {
                 //-2- 对端关闭
                 cout << "peer dis-connnect fd=" << conn_fd << endl;
+                shutdown(conn_fd, SHUT_RDWR); //0 succ
                 close(conn_fd);
                 //pthread_exit(NULL);
                 perror("recv_len = 0");
