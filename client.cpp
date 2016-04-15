@@ -16,56 +16,48 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-#define SERVER_IP "127.0.0.1"
 #define SERVER_PORT 4444
 
-void *onread(void *args) {
-    int conn_fd = (int) (*((int*) args));
-    //    struct sockaddr_in cli_addr;
-    //    socklen_t addrlen = sizeof (struct sockaddr_in);
-    char msg[10];
-    while (true) {
-        bool finish = false;
-        std::string msg_from_server;
-        while (!finish) {
-            memset(msg, 0x0, sizeof (msg));
-            //block default
-            //non-block
-            //when no data EAGAIN occur
-            //int recv_len = recv(conn_fd,msg,sizeof(msg),MSG_DONTWAIT);
-            //cout<<"recv msg from server len="<<recv_len<<endl;
-            //-1- 异常
-            if (recv_len < 0) {
-                cout << "recv error:" << strerror(errno) << endl;
-                //EAGAIN for non-block recv
-                /*if(errno == EAGAIN) {
-                  break;
-                  }*/
-                close(conn_fd);
-                exit(1);
-            } else if (recv_len == 0) {
-                //-2- 对端关闭
-                cout << "peer dis-connect fd=" << conn_fd << endl;
-                //for CLOSE_WAIT
-                close(conn_fd);
-                exit(2);
-            }
+int getIpbyHostName(char *ip) {
+    char **pptr;
+    struct hostent *hptr;
+    char str[32];
 
-            //-3- 判断是否读完
-            if (recv_len != sizeof (msg)) {
-                cout << "recv last msg from server(" << conn_fd << "):" << msg << endl;
-                msg_from_server += msg;
-                cout << "recv msg finish from server(" << conn_fd << "):" << msg_from_server << endl;
-                finish = true;
-            } else {
-                cout << "recv unfinish(" << msg << "),continue to read!" << endl;
-                msg_from_server += msg;
-            }
-        }
+    char hostname[64];
+    if (gethostname(hostname, sizeof (hostname)) != 0) {
+        printf(" gethostname error for host:%s\n", hostname);
+        return -1;
     }
+
+    printf("hostname:%s\n", hptr->h_name);
+    if ((hptr = gethostbyname(hostname)) == NULL) {
+        printf(" gethostbyname error for host:%s\n", hostname);
+        return -2;
+    }
+
+    printf("official hostname:%s\n", hptr->h_name);
+    for (pptr = hptr->h_aliases; *pptr != NULL; pptr++)
+        printf(" alias:%s\n", *pptr);
+
+    switch (hptr->h_addrtype) {
+        case AF_INET:
+        case AF_INET6:
+            pptr = hptr->h_addr_list;
+            for (; *pptr != NULL; pptr++)
+                printf(" address:%s\n",
+                    inet_ntop(hptr->h_addrtype, *pptr, str, sizeof (str)));
+            ip = inet_ntop(hptr->h_addrtype, hptr->h_addr, str, sizeof (str));
+            printf(" first address: %s\n", ip);
+            break;
+        default:
+            printf("unknown address type\n");
+            break;
+    }
+
+    return 0;
 }
 
-void *onread2(void *args) {
+void *onread(void *args) {
     int conn_fd = (int) (*((int*) args));
     char msg[8];
     string recv_msg;
@@ -152,19 +144,24 @@ void *onwrite(void *args) {
     }
 }
 
-void onconnect() {
+int onconnect() {
     //--/usr/include/netinet/in.h
     struct sockaddr_in *myaddr = new sockaddr_in;
     myaddr->sin_family = AF_INET;
     myaddr->sin_port = htons(SERVER_PORT);
     myaddr->sin_addr.s_addr = INADDR_ANY;
-    inet_pton(AF_INET, SERVER_IP, (void *) &(myaddr->sin_addr));
+    char server_ip[32] = '\0';
+    if (getIpbyHostName(server_ip) != 0) {
+        cout << "getIpbyHostName error!" << endl;
+        return -1;
+    }
+    inet_pton(AF_INET, server_ip, (void *) &(myaddr->sin_addr));
 
     //tcp
     int fd = socket(AF_INET, SOCK_STREAM, 0);
     if (fd < 0) {
         cout << "create socket error!" << endl;
-        return;
+        return -2;
     }
     socklen_t s_len = sizeof (struct sockaddr_in);
     while (true) {
@@ -182,7 +179,7 @@ void onconnect() {
 
     pthread_t pid_1, pid_2;
     pthread_create(&pid_1, NULL, onwrite, &fd);
-    pthread_create(&pid_2, NULL, onread2, &fd);
+    pthread_create(&pid_2, NULL, onread, &fd);
 
     //--等待线程结束
     void *s1 = NULL;
@@ -196,6 +193,8 @@ void onconnect() {
     //close
     close(fd);
     delete myaddr;
+
+    return 0;
 }
 
 int main(int argc, char *argv[]) {

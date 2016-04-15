@@ -65,7 +65,7 @@ int onaccept(const int listen_fd) {
         return -1;
     }
     char tmp[256] = '\0';
-    sprintf(tmp,"a new connection from client:fd=%d;client-ip=%s;client-port=%d",conn_fd, inet_ntoa(cli_addr.sin_addr), cli_addr.sin_port);
+    sprintf(tmp, "a new connection from client:fd=%d;client-ip=%s;client-port=%d", conn_fd, inet_ntoa(cli_addr.sin_addr), cli_addr.sin_port);
     cout << tmp << endl;
     return conn_fd;
 }
@@ -212,13 +212,14 @@ void *onepoll(void *args) {
     }
 
     for (;;) {
-        //block indefinitely
-        int count = epoll_wait(epoll_fd, epoll_events, MAX_EVENT, -1);
-        //nonblock
-        //int count = epoll_wait(epoll_fd, epoll_events, MAX_EVENT, 0);
+        //--block indefinitely
+        //int count = epoll_wait(epoll_fd, epoll_events, MAX_EVENT, -1);
+
+        //--nonblock
+        int count = epoll_wait(epoll_fd, epoll_events, MAX_EVENT, 0);
         switch (count) {
             case 0:
-                cout << "nothing happen...\n";
+                //cout << "nothing happen...\n";
                 break;
             case -1:
                 cout << "error event happen error:" << strerror(errno) << endl;
@@ -271,7 +272,7 @@ int main(int argc, char *argv[]) {
     myaddr->sin_addr.s_addr = INADDR_ANY;
     //myaddr->sin_addr.s_addr=inet_addr("192.168.0.1");
 
-    socklen_t s_len = sizeof(struct sockaddr_in);
+    socklen_t s_len = sizeof (struct sockaddr_in);
     //tcp
     int fd = socket(AF_INET, SOCK_STREAM, 0);
     if (fd < 0) {
