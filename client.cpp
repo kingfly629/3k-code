@@ -48,7 +48,11 @@ int getIpbyHostName(char *ip) {
             for (; *pptr != NULL; pptr++)
                 printf(" address:%s\n",
                     inet_ntop(hptr->h_addrtype, *pptr, str, sizeof (str)));
-            ip = inet_ntop(hptr->h_addrtype, hptr->h_addr, str, sizeof (str));
+            ip = (char *)inet_ntop(hptr->h_addrtype, hptr->h_addr, str, sizeof (str));
+            //应该需要拷贝？？
+            if (ip == NULL) {
+                return -3;
+            }
             printf(" first address: %s\n", ip);
             break;
         default:
@@ -111,7 +115,6 @@ void *onread(void *args) {
                 break;
             }
 
-            ev.data.fd = conn_fd;
             //-3- 判断是否读完
             body_len -= recv_len;
             if (recv_len != sizeof (msg) || body_len <= 0) {
@@ -152,7 +155,7 @@ int onconnect() {
     myaddr->sin_family = AF_INET;
     myaddr->sin_port = htons(SERVER_PORT);
     myaddr->sin_addr.s_addr = INADDR_ANY;
-    char server_ip[32] = '\0';
+    char server_ip[32] = {'\0'};
     if (getIpbyHostName(server_ip) != 0) {
         cout << "getIpbyHostName error!" << endl;
         return -1;
@@ -230,7 +233,6 @@ int main(int argc, char *argv[]) {
         }
 
     }
-
 
     return 0;
 }
