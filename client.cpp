@@ -2,6 +2,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#include <netdb.h>//用于结构struct hostent
 #include <pthread.h>
 #include <sys/wait.h>
 #include <sys/types.h>
@@ -15,6 +16,7 @@
 using std::cout;
 using std::cin;
 using std::endl;
+using std::string;
 
 #define SERVER_PORT 4444
 
@@ -29,7 +31,7 @@ int getIpbyHostName(char *ip) {
         return -1;
     }
 
-    printf("hostname:%s\n", hptr->h_name);
+    printf("hostname:%s\n", hostname);
     if ((hptr = gethostbyname(hostname)) == NULL) {
         printf(" gethostbyname error for host:%s\n", hostname);
         return -2;

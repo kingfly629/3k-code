@@ -1,5 +1,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <sys/epoll.h>
 #include <pthread.h>
 #include <errno.h>
@@ -64,7 +65,7 @@ int onaccept(const int listen_fd) {
         perror("epoll_ctl error");
         return -1;
     }
-    char tmp[256] = '\0';
+    char tmp[256] = {'\0'};
     sprintf(tmp, "a new connection from client:fd=%d;client-ip=%s;client-port=%d", conn_fd, inet_ntoa(cli_addr.sin_addr), cli_addr.sin_port);
     cout << tmp << endl;
     return conn_fd;
@@ -72,6 +73,7 @@ int onaccept(const int listen_fd) {
 
 int onread(const int conn_fd) {
     int flag = 0;
+    struct epoll_event ev;
     finish_flag[conn_fd] = false;
     if (recv_msg[conn_fd] == NULL) {
         recv_msg[conn_fd] = new char[INIT_BUF_SIZE];
@@ -158,6 +160,7 @@ int onread(const int conn_fd) {
 }
 
 int onwrite(const char *msg, const int fd) {
+    assert(msg != NULL);
     //head
     char head_len[8];
     sprintf(head_len, "%d", strlen(msg));
@@ -169,6 +172,7 @@ int onwrite(const char *msg, const int fd) {
     cout << "write msg head success(" << fd << ") head=" << head_len << ",len=" << ret << endl;
 
     //body
+    char tmp[16];
     int write_len = -1;
     int left_len = strlen(msg);
     int cur_pos = 0;
@@ -190,8 +194,8 @@ int onwrite(const char *msg, const int fd) {
     struct epoll_event ev;
     ev.events = EPOLLET | EPOLLIN;
     ev.data.fd = fd;
-    int ret = epoll_ctl(epoll_fd, EPOLL_CTL_MOD, fd, &ev);
-    if (ret != 0) {
+    int ret2 = epoll_ctl(epoll_fd, EPOLL_CTL_MOD, fd, &ev);
+    if (ret2 != 0) {
         perror("epoll ctl error write");
         return -3;
     }
