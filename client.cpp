@@ -194,7 +194,7 @@ int onconnect() {
 
         cout << "connect succ on fd=" << fd << endl;
         //非阻塞模式
-        set_fd_nonblock(fd);
+        //set_fd_nonblock(fd);
         break;
     }
 
