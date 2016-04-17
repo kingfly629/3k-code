@@ -28,16 +28,17 @@ int used_size[NUM];
 bool finish_flag[NUM];
 int epoll_fd = -1;
 
-char *adjust_buf(char *buf, int index) {
+char *adjust_buf(char **buf, int index) {
     //剩余一个字节，则重新分配
-    char *new_buf = buf;
+    char *new_buf = *buf;
     if (total_len[index] - used_size[index] <= 1) {
         total_len[index] *= 2;
         new_buf = new char[total_len[index]];
         memset(new_buf, 0x0, total_len[index]);
         ::memcpy(new_buf, buf, strlen(buf));
-        delete[] buf;
-        buf = NULL;
+        delete[] *buf;
+        *buf = NULL;
+        *buf = new_buf;
     }
     return new_buf;
 }
@@ -82,10 +83,10 @@ int onread(const int conn_fd) {
         total_len[conn_fd] = INIT_BUF_SIZE;
     }
     while (1) {
-        char *p = adjust_buf(recv_msg[conn_fd], conn_fd);
+        char *p = adjust_buf(&recv_msg[conn_fd], conn_fd);
         cout << "conn_fd=" << conn_fd << ",total_len=" << total_len[conn_fd] << ",used_size=" << used_size[conn_fd] << endl;
         int recv_len = read(conn_fd, p + used_size[conn_fd], total_len[conn_fd] - used_size[conn_fd] - 1);
-        recv_msg[conn_fd] = p;
+        //recv_msg[conn_fd] = p;
         //-1- 异常
         if (recv_len < 0) {
             //non-block use
@@ -126,13 +127,13 @@ int onread(const int conn_fd) {
 
         ev.data.fd = conn_fd;
         //-3- 判断是否读完
-        //cout << "judge end:" << (p + used_size[conn_fd] + recv_len - 2) << endl;
+        cout << "judge end:" << (p + used_size[conn_fd] + recv_len - 2) << endl;
         if (strncmp(p + used_size[conn_fd] + recv_len - 2, "nn", 2) == 0) {
             p[used_size[conn_fd] + recv_len - 2] = '\0';
             finish_flag[conn_fd] = true;
         }
         if (finish_flag[conn_fd]) {
-            cout << "recv msg finish(fd=" << conn_fd << "):whole-msg[" << recv_msg[conn_fd] << "],recv_len[" << strlen(recv_msg[conn_fd]) << "]" << endl;
+            cout << "recv msg finish(fd=" << conn_fd << "):whole-msg[" << recv_msg[conn_fd] << "],total_len[" << strlen(recv_msg[conn_fd]) << "]" << endl;
             ev.events = EPOLLET | EPOLLOUT;
             int ret = epoll_ctl(epoll_fd, EPOLL_CTL_MOD, conn_fd, &ev);
             if (ret != 0) {
@@ -223,15 +224,15 @@ void *onepoll(void *args) {
         //--nonblock
         int count = epoll_wait(epoll_fd, epoll_events, MAX_EVENT, 0);
         switch (count) {
-            case 0:
-                //cout << "nothing happen...\n";
-                break;
-            case -1:
-                cout << "error event happen error:" << strerror(errno) << endl;
-                break;
-            default:
-                //cout << "the event we expect happen count="<<count<<endl;
-                break;
+        case 0:
+            //cout << "nothing happen...\n";
+            break;
+        case -1:
+            cout << "error event happen error:" << strerror(errno) << endl;
+            break;
+        default:
+            //cout << "the event we expect happen count="<<count<<endl;
+            break;
 
         }
         for (int index = 0; index < count; ++index) {
@@ -239,7 +240,7 @@ void *onepoll(void *args) {
                 //accept
                 cout << "connect event happen fd=" << listen_fd << endl;
                 if (onaccept(listen_fd) < 0) {
-                    perror("onaccept fail:");
+                    perror("onaccept fail");
                     continue;
                 }
             } else if (epoll_events[index].events & EPOLLIN) {
@@ -247,7 +248,7 @@ void *onepoll(void *args) {
                 cout << "readable event happen fd=" << epoll_events[index].data.fd << endl;
                 int conn_fd = epoll_events[index].data.fd;
                 if (onread(conn_fd) != 0) {
-                    perror("onread fail:");
+                    perror("onread fail");
                     continue;
                 }
             } else if (epoll_events[index].events & EPOLLOUT) {
@@ -255,7 +256,7 @@ void *onepoll(void *args) {
                 cout << "writeable event happen fd=" << epoll_events[index].data.fd << endl;
                 int conn_fd = epoll_events[index].data.fd;
                 if (onwrite(REPLY_MSG, conn_fd) != 0) {
-                    perror("onwrite fail:");
+                    perror("onwrite fail");
                     continue;
                 }
             } else {

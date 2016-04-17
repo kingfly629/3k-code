@@ -42,25 +42,56 @@ int getIpbyHostName(char *ip) {
         printf(" alias:%s\n", *pptr);
 
     switch (hptr->h_addrtype) {
-        case AF_INET:
-        case AF_INET6:
-            pptr = hptr->h_addr_list;
-            for (; *pptr != NULL; pptr++)
-                printf(" address:%s\n",
-                    inet_ntop(hptr->h_addrtype, *pptr, str, sizeof (str)));
-            ip = (char *) inet_ntop(hptr->h_addrtype, hptr->h_addr, str, sizeof (str));
-            //应该需要拷贝？？
-            if (ip == NULL) {
-                return -3;
-            }
-            printf(" first address: %s\n", ip);
-            break;
-        default:
-            printf("unknown address type\n");
-            break;
+    case AF_INET:
+    case AF_INET6:
+        pptr = hptr->h_addr_list;
+        for (; *pptr != NULL; pptr++)
+            printf(" address:%s\n",
+                   inet_ntop(hptr->h_addrtype, *pptr, str, sizeof (str)));
+        ip = (char *) inet_ntop(hptr->h_addrtype, hptr->h_addr, str, sizeof (str));
+        //应该需要拷贝？？
+        if (ip == NULL) {
+            return -3;
+        }
+        printf(" first address: %s\n", ip);
+        break;
+    default:
+        printf("unknown address type\n");
+        break;
     }
 
     return 0;
+}
+
+bool judge_recv(const int recv_len,const int conn_fd) {
+    if (recv_len < 0) {
+        //-1- 异常
+        //non-block use
+        if(errno == EAGAIN) {
+            cout << "EAGAIN fd=" << conn_fd << endl;
+            return 1;
+        }
+        cout << "recv_len<0, fd=" << conn_fd  << endl;
+        shutdown(conn_fd, SHUT_RDWR); //0 succ
+        close(conn_fd);
+        perror("recv_len<0");
+        return -1;
+    } else if (recv_len == 0) {
+        //-2- 对端关闭
+        cout << "peer dis-connnect(error="<<strerror(errno)<<"), fd=" << conn_fd << endl;
+        shutdown(conn_fd, SHUT_RDWR); //0 succ
+        close(conn_fd);
+        return -2;
+    }
+    return 0;
+}
+
+void set_fd_nonblock(int fd) {
+
+    int flags = fcntl(fd, F_GETFL, 0);
+    if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) != 0) {
+        perror("F_SETFL ERROR");
+    }
 }
 
 void *onread(void *args) {
@@ -69,22 +100,14 @@ void *onread(void *args) {
     string recv_msg;
 
     while (true) {
+        recv_msg.clear();
         //包头：记录包体的长度
-        memset(msg, 0x0, sizeof (msg));
-        int recv_len = read(conn_fd, msg, sizeof (msg));
-        //-1- 异常
-        if (recv_len < 0) {
-            cout << "recv error!" << endl;
-            perror("recv_len < 0");
+        memset(msg, 0x0, sizeof(msg));
+        int recv_len = read(conn_fd, msg, sizeof(msg));
+        if (judge_recv(recv_len,conn_fd) != 0) {
             exit(-1);
-        } else if (recv_len == 0) {
-            //-2- 对端关闭
-            cout << "peer dis-connnect fd=" << conn_fd << endl;
-            shutdown(conn_fd, SHUT_RDWR); //0 succ
-            close(conn_fd);
-            perror("recv_len = 0");
-            exit(-2);
         }
+
         int body_len = atoi(msg);
         if (body_len < 0) {
             perror("head length < 0");
@@ -93,33 +116,21 @@ void *onread(void *args) {
             cout << "recv head succ(fd=" << conn_fd << ") body_len:" << body_len << endl;
         }
 
+        //包体
         while (1) {
-            //包体
             memset(msg, 0x0, sizeof (msg));
             recv_len = read(conn_fd, msg, sizeof (msg));
-            //-1- 异常
-            if (recv_len < 0) {
-                cout << "recv error!" << endl;
-                //non-block use
-                /*if(errno == EAGAIN) {
-                  break;
-                  }*/
-                perror("recv_len < 0");
-                exit(-3);
-            } else if (recv_len == 0) {
-                //-2- 对端关闭
-                cout << "peer dis-connnect fd=" << conn_fd << endl;
-                shutdown(conn_fd, SHUT_RDWR); //0 succ
-                close(conn_fd);
-                //pthread_exit(NULL);
-                perror("recv_len = 0");
-                break;
+            if (judge_recv(recv_len,conn_fd) < 0) {
+                exit(-2);
+            } else if(judge_recv(recv_len,conn_fd) == 1) {
+                sleep(3);//fortest
+                continue;
             }
 
             //-3- 判断是否读完
             body_len -= recv_len;
-            if (recv_len != sizeof (msg) || body_len <= 0) {
-                cout << "recv msg succ(fd=" << conn_fd << "):" << msg << endl;
+            if (recv_len != sizeof(msg) || body_len <= 0) {
+                cout << "recv last msg(fd=" << conn_fd << "):" << msg << endl;
                 recv_msg += msg;
                 cout << "recv msg finish(fd=" << conn_fd << "):" << recv_msg << endl;
                 break;
@@ -180,6 +191,8 @@ int onconnect() {
         }
 
         cout << "connect succ on fd=" << fd << endl;
+        //非阻塞模式
+        set_fd_nonblock(fd);
         break;
     }
 
@@ -190,11 +203,11 @@ int onconnect() {
     //--等待线程结束
     void *s1 = NULL;
     void *s2 = NULL;
-    pthread_join(pid_1, &s1);
-    cout << "Thread 1 returns:" << (char *) s1 << endl;
-    pthread_cancel(pid_2);
-    pthread_join(pid_2, &s2);
-    cout << "Thread 2 returns:" << (char *) s2 << endl;
+    pthread_join(pid_2, &s1);
+    cout << "Thread 2 returns:" << (char *) s1 << endl;
+    pthread_cancel(pid_1);
+    pthread_join(pid_1, &s2);
+    cout << "Thread 1 returns:" << (char *) s2 << endl;
 
     //close
     close(fd);
