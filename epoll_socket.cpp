@@ -35,7 +35,7 @@ char *adjust_buf(char **buf, int index) {
         total_len[index] *= 2;
         new_buf = new char[total_len[index]];
         memset(new_buf, 0x0, total_len[index]);
-        ::memcpy(new_buf, buf, strlen(buf));
+        ::memcpy(new_buf, *buf, strlen(*buf));
         delete[] *buf;
         *buf = NULL;
         *buf = new_buf;
