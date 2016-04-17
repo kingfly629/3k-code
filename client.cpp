@@ -105,7 +105,8 @@ void *onread(void *args) {
         //包头：记录包体的长度
         memset(msg, 0x0, sizeof(msg));
         int recv_len = read(conn_fd, msg, sizeof(msg));
-        if (judge_recv(recv_len,conn_fd) != 0) {
+        if (judge_recv(recv_len,conn_fd) < 0) {
+            sleep(5);
             exit(-1);
         }
 
@@ -206,7 +207,7 @@ int onconnect() {
     void *s2 = NULL;
     pthread_join(pid_2, &s1);
     cout << "Thread 2 returns:" << (char *) s1 << endl;
-    pthread_cancel(pid_1);
+    //pthread_cancel(pid_1);
     pthread_join(pid_1, &s2);
     cout << "Thread 1 returns:" << (char *) s2 << endl;
 
