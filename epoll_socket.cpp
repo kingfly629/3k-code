@@ -145,6 +145,8 @@ int onread(const int conn_fd) {
             //接收完数据释放
             delete[] recv_msg[conn_fd];
             recv_msg[conn_fd] = NULL;
+            used_size[conn_fd] = 0;
+            p = NULL;
             return 0;
         } else {
             cout << "recv unfinish(fd=" << conn_fd << "),[part-msg=" << (p + used_size[conn_fd]) << ",recv_len=" << recv_len << "],continue to read!" << endl;

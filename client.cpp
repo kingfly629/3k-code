@@ -205,11 +205,11 @@ int onconnect() {
     //--等待线程结束
     void *s1 = NULL;
     void *s2 = NULL;
-    pthread_join(pid_2, &s1);
-    cout << "Thread 2 returns:" << (char *) s1 << endl;
-    //pthread_cancel(pid_1);
-    pthread_join(pid_1, &s2);
-    cout << "Thread 1 returns:" << (char *) s2 << endl;
+    pthread_join(pid_1, &s1);
+    cout << "Thread 1 returns:" << (char *) s1 << endl;
+    pthread_cancel(pid_2);
+    pthread_join(pid_2, &s2);
+    cout << "Thread 2 returns:" << (char *) s2 << endl;
 
     //close
     close(fd);
