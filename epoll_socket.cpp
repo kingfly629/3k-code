@@ -35,9 +35,9 @@ char *adjust_buf(char **buf, int index) {
         total_len[index] *= 2;
         new_buf = new char[total_len[index]];
         memset(new_buf, 0x0, total_len[index]);
-        //::memcpy(new_buf, *buf, strlen(*buf));
-        strcpy(new_buf, *buf);
-        delete[] * buf;
+        ::memcpy(new_buf, *buf, strlen(*buf));
+        //strcpy(new_buf, *buf);
+        delete[] *buf;
         //*buf = NULL;
         *buf = new_buf;
     }
@@ -153,7 +153,7 @@ int onread(const int conn_fd) {
             delete[] recv_msg[conn_fd];
             recv_msg[conn_fd] = NULL;
             used_size[conn_fd] = 0;
-            delete[] p; //does this work? 乱码
+            //delete[] p; //does this work? 乱码
             p = NULL;
             return 0;
         } else {

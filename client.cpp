@@ -159,7 +159,7 @@ void *onwrite(void *args) {
 
         int ret = send(conn_fd, msg, strlen(msg), 0);
         if (ret <= 0) {
-            cout << "write write error" << endl;
+            cout << "write error" << endl;
             pthread_exit(&ret);
         }
         cout << "write msg body success(" << conn_fd << ") msg=" << msg << ",len=" << ret << endl;
@@ -210,15 +210,15 @@ int onconnect() {
     void *s2 = NULL;
     if (pthread_join(pid_1, &s1) == 0 || pthread_join(pid_2, &s2) == 0) {
         //pthread_cancel(pid_2);
-        cout << "Thread 1 returns:" << (char *) s1 << endl;
-        cout << "Thread 2 returns:" << (char *) s2 << endl;
+        cout << "Thread 1 returns:" << (int) (*((int *) s1)) << endl;
+        cout << "Thread 2 returns:" << (int) (*((int *) s2)) << endl;
     }
 
     //close
     close(fd);
     delete myaddr;
 
-    return 110;
+    exit(110);
 }
 
 int main(int argc, char *argv[]) {
@@ -240,7 +240,7 @@ int main(int argc, char *argv[]) {
     int status = -1;
     while ((pid = waitpid(-1, &status, 0)) >= 0) {
         if (WIFEXITED(status)) {
-            cout << pid << " (child process) terminated normally.\n";
+            cout << "child process:" << pid << ";(exit code:" << status << ") terminated normally.\n";
             WEXITSTATUS(status);
         }
         cout << "catch signal SIGCHLD pid=" << pid << ",exit_status=" << status << endl;
