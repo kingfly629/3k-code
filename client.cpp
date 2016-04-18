@@ -151,7 +151,7 @@ void *onread(void *args) {
 void *onwrite(void *args) {
     int conn_fd = (int) (*((int*) args));
     char head_len[8];
-    int ret = -1;
+    int ret = 13;
     while (1) {
         char msg[1024];
         cout << "input the msg to send(1024 bytes max):\n";

@@ -36,8 +36,10 @@ char *adjust_buf(char **buf, int index) {
         new_buf = new char[total_len[index]];
         memset(new_buf, 0x0, total_len[index]);
         ::memcpy(new_buf, *buf, strlen(*buf));
+        cout << "new_buf=" << *buf << ";strlen(*buf)=" << strlen(*buf) << endl;
+        cout << "new_buf=" << new_buf << ";strlen(new_buf)=" << strlen(new_buf) << endl;
         //strcpy(new_buf, *buf);
-        delete[] *buf;
+        delete[] * buf;
         //*buf = NULL;
         *buf = new_buf;
     }
@@ -54,8 +56,8 @@ void set_fd_nonblock(int fd) {
 
 int onaccept(const int listen_fd) {
     struct sockaddr_in cli_addr;
-    socklen_t addrlen = sizeof(struct sockaddr_in);
-    int conn_fd = accept(listen_fd, (struct sockaddr *)&cli_addr, &addrlen);
+    socklen_t addrlen = sizeof (struct sockaddr_in);
+    int conn_fd = accept(listen_fd, (struct sockaddr *) &cli_addr, &addrlen);
 
     //非阻塞模式
     set_fd_nonblock(conn_fd);
@@ -91,6 +93,7 @@ int onread(const int conn_fd) {
     }
     while (1) {
         char *p = adjust_buf(&recv_msg[conn_fd], conn_fd);
+        cout << "p=" << p << ";strlen(p)=" << strlen(p) << endl;
         cout << "conn_fd=" << conn_fd << ",total_len=" << total_len[conn_fd] << ",used_size=" << used_size[conn_fd] << endl;
         int recv_len = read(conn_fd, p + used_size[conn_fd], total_len[conn_fd] - used_size[conn_fd] - 1);
         //recv_msg[conn_fd] = p;
