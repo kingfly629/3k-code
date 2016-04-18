@@ -43,43 +43,43 @@ int getIpbyHostName(char *ip) {
         printf(" alias:%s\n", *pptr);
 
     switch (hptr->h_addrtype) {
-    case AF_INET:
-    case AF_INET6:
-        pptr = hptr->h_addr_list;
-        for (; *pptr != NULL; pptr++)
-            printf(" address:%s\n",
-                   inet_ntop(hptr->h_addrtype, *pptr, str, sizeof (str)));
-        ip = (char *) inet_ntop(hptr->h_addrtype, hptr->h_addr, str, sizeof (str));
-        //应该需要拷贝？？
-        if (ip == NULL) {
-            return -3;
-        }
-        printf(" first address: %s\n", ip);
-        break;
-    default:
-        printf("unknown address type\n");
-        break;
+        case AF_INET:
+        case AF_INET6:
+            pptr = hptr->h_addr_list;
+            for (; *pptr != NULL; pptr++)
+                printf(" address:%s\n",
+                    inet_ntop(hptr->h_addrtype, *pptr, str, sizeof (str)));
+            ip = (char *) inet_ntop(hptr->h_addrtype, hptr->h_addr, str, sizeof (str));
+            //应该需要拷贝？？
+            if (ip == NULL) {
+                return -3;
+            }
+            printf(" first address: %s\n", ip);
+            break;
+        default:
+            printf("unknown address type\n");
+            break;
     }
 
     return 0;
 }
 
-bool judge_recv(const int recv_len,const int conn_fd) {
+bool judge_recv(const int recv_len, const int conn_fd) {
     if (recv_len < 0) {
         //-1- 异常
         //non-block use
-        if(errno == EAGAIN) {
+        if (errno == EAGAIN) {
             cout << "EAGAIN fd=" << conn_fd << endl;
             return 1;
         }
-        cout << "recv_len<0, fd=" << conn_fd  << endl;
+        cout << "recv_len<0, fd=" << conn_fd << endl;
         shutdown(conn_fd, SHUT_RDWR); //0 succ
         close(conn_fd);
         perror("recv_len<0");
         return -1;
     } else if (recv_len == 0) {
         //-2- 对端关闭
-        cout << "peer dis-connnect(error="<<strerror(errno)<<"), fd=" << conn_fd << endl;
+        cout << "peer dis-connnect(error=" << strerror(errno) << "), fd=" << conn_fd << endl;
         shutdown(conn_fd, SHUT_RDWR); //0 succ
         close(conn_fd);
         return -2;
@@ -103,17 +103,18 @@ void *onread(void *args) {
     while (true) {
         recv_msg.clear();
         //包头：记录包体的长度
-        memset(msg, 0x0, sizeof(msg));
-        int recv_len = read(conn_fd, msg, sizeof(msg));
-        if (judge_recv(recv_len,conn_fd) < 0) {
-            sleep(5);
+        memset(msg, 0x0, sizeof (msg));
+        int recv_len = read(conn_fd, msg, sizeof (msg));
+        if (judge_recv(recv_len, conn_fd) < 0) {
+            sleep(1);
+            //continue;
             exit(-1);
         }
 
         int body_len = atoi(msg);
-        if (body_len < 0) {
-            perror("head length < 0");
-            exit(-3);
+        if (body_len <= 0) {
+            perror("head length <= 0");
+            exit(-2);
         } else {
             cout << "recv head succ(fd=" << conn_fd << ") body_len:" << body_len << endl;
         }
@@ -122,16 +123,16 @@ void *onread(void *args) {
         while (1) {
             memset(msg, 0x0, sizeof (msg));
             recv_len = read(conn_fd, msg, sizeof (msg));
-            if (judge_recv(recv_len,conn_fd) < 0) {
-                exit(-2);
-            } else if(judge_recv(recv_len,conn_fd) == 1) {
-                sleep(3);//fortest
+            if (judge_recv(recv_len, conn_fd) < 0) {
+                exit(-3);
+            } else if (judge_recv(recv_len, conn_fd) == 1) {
+                sleep(3); //non-block use
                 continue;
             }
 
             //-3- 判断是否读完
             body_len -= recv_len;
-            if (recv_len != sizeof(msg) || body_len <= 0) {
+            if (recv_len != sizeof (msg) || body_len <= 0) {
                 cout << "recv last msg(fd=" << conn_fd << "):" << msg << endl;
                 recv_msg += msg;
                 cout << "recv msg finish(fd=" << conn_fd << "):" << recv_msg << endl;
@@ -168,7 +169,7 @@ int onconnect() {
     struct sockaddr_in *myaddr = new sockaddr_in;
     myaddr->sin_family = AF_INET;
     myaddr->sin_port = htons(SERVER_PORT);
-    myaddr->sin_addr.s_addr = INADDR_ANY;
+    //myaddr->sin_addr.s_addr = INADDR_ANY;
     char server_ip[32] = {'\0'};
     if (getIpbyHostName(server_ip) != 0) {
         cout << "getIpbyHostName error!" << endl;
@@ -207,7 +208,7 @@ int onconnect() {
     void *s2 = NULL;
     pthread_join(pid_1, &s1);
     cout << "Thread 1 returns:" << (char *) s1 << endl;
-    pthread_cancel(pid_2);
+    //pthread_cancel(pid_2);
     pthread_join(pid_2, &s2);
     cout << "Thread 2 returns:" << (char *) s2 << endl;
 

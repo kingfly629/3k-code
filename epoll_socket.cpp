@@ -35,9 +35,10 @@ char *adjust_buf(char **buf, int index) {
         total_len[index] *= 2;
         new_buf = new char[total_len[index]];
         memset(new_buf, 0x0, total_len[index]);
-        ::memcpy(new_buf, *buf, strlen(*buf));
-        delete[] *buf;
-        *buf = NULL;
+        //::memcpy(new_buf, *buf, strlen(*buf));
+        strcpy(new_buf, *buf);
+        delete[] * buf;
+        //*buf = NULL;
         *buf = new_buf;
     }
     return new_buf;
@@ -54,7 +55,7 @@ void set_fd_nonblock(int fd) {
 int onaccept(const int listen_fd) {
     struct sockaddr_in cli_addr;
     socklen_t addrlen = sizeof (struct sockaddr_in);
-    int conn_fd = accept(listen_fd, (struct sockaddr *) &cli_addr, &addrlen);\
+    int conn_fd = accept(listen_fd, (struct sockaddr *) &cli_addr, &addrlen);
 
     //非阻塞模式
     set_fd_nonblock(conn_fd);
@@ -68,7 +69,11 @@ int onaccept(const int listen_fd) {
         return -1;
     }
     char tmp[256] = {'\0'};
-    sprintf(tmp, "a new connection from client:fd=%d;client-ip=%s;client-port=%d", conn_fd, inet_ntoa(cli_addr.sin_addr), cli_addr.sin_port);
+    sprintf(tmp, "a new connection from client:fd=%d;client-ip=%s;client-port=%d", conn_fd, inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port));
+    //fortestuse
+    struct sockaddr_in cli_addr2;
+    getpeername(conn_fd, (struct sockaddr *) &cli_addr2, &addrlen);
+    sprintf(tmp, "client:fd=%d;client-ip=%s;client-port=%d", conn_fd, inet_ntoa(cli_addr2.sin_addr), ntohs(cli_addr2.sin_port));
     cout << tmp << endl;
     return conn_fd;
 }
@@ -188,6 +193,7 @@ int onwrite(const char *msg, const int fd) {
             return -2;
         } else {
             strncpy(tmp, msg + cur_pos, write_len);
+            tmp[write_len] = '\0';
             cout << "write msg succ to fd=" << fd << "[msg=" << tmp << ",len=" << write_len << "]" << endl;
         }
         cur_pos += write_len;
@@ -226,15 +232,15 @@ void *onepoll(void *args) {
         //--nonblock
         int count = epoll_wait(epoll_fd, epoll_events, MAX_EVENT, 0);
         switch (count) {
-        case 0:
-            //cout << "nothing happen...\n";
-            break;
-        case -1:
-            cout << "error event happen error:" << strerror(errno) << endl;
-            break;
-        default:
-            //cout << "the event we expect happen count="<<count<<endl;
-            break;
+            case 0:
+                //cout << "nothing happen...\n";
+                break;
+            case -1:
+                cout << "error event happen error:" << strerror(errno) << endl;
+                break;
+            default:
+                //cout << "the event we expect happen count="<<count<<endl;
+                break;
 
         }
         for (int index = 0; index < count; ++index) {
