@@ -112,7 +112,7 @@ void *onread(void *args) {
         }
 
         int body_len = atoi(msg);
-        if (body_len 0) {
+        if (body_len < 0) {
             perror("head length < 0");
             ret = -2;
             pthread_exit(&ret);
