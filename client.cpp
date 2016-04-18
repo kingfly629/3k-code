@@ -64,7 +64,7 @@ int getIpbyHostName(char *ip) {
     return 0;
 }
 
-bool judge_recv(const int recv_len, const int conn_fd) {
+int judge_recv(const int recv_len, const int conn_fd) {
     if (recv_len < 0) {
         //-1- 异常
         //non-block use
@@ -99,6 +99,7 @@ void *onread(void *args) {
     int conn_fd = (int) (*((int*) args));
     char msg[8];
     string recv_msg;
+    int ret = 0;
 
     while (true) {
         recv_msg.clear();
@@ -106,15 +107,15 @@ void *onread(void *args) {
         memset(msg, 0x0, sizeof (msg));
         int recv_len = read(conn_fd, msg, sizeof (msg));
         if (judge_recv(recv_len, conn_fd) < 0) {
-            sleep(1);
-            //continue;
-            exit(-1);
+            ret = -1;
+            pthread_exit(&ret);
         }
 
         int body_len = atoi(msg);
-        if (body_len <= 0) {
-            perror("head length <= 0");
-            exit(-2);
+        if (body_len 0) {
+            perror("head length < 0");
+            ret = -2;
+            pthread_exit(&ret);
         } else {
             cout << "recv head succ(fd=" << conn_fd << ") body_len:" << body_len << endl;
         }
@@ -124,9 +125,10 @@ void *onread(void *args) {
             memset(msg, 0x0, sizeof (msg));
             recv_len = read(conn_fd, msg, sizeof (msg));
             if (judge_recv(recv_len, conn_fd) < 0) {
-                exit(-3);
+                ret = -3;
+                pthread_exit(&ret);
             } else if (judge_recv(recv_len, conn_fd) == 1) {
-                sleep(3); //non-block use
+                usleep(50000); //non-block use
                 continue;
             }
 
@@ -149,6 +151,7 @@ void *onread(void *args) {
 void *onwrite(void *args) {
     int conn_fd = (int) (*((int*) args));
     char head_len[8];
+    int ret = -1;
     while (1) {
         char msg[1024];
         cout << "input the msg to send(1024 bytes max):\n";
@@ -157,10 +160,9 @@ void *onwrite(void *args) {
         int ret = send(conn_fd, msg, strlen(msg), 0);
         if (ret <= 0) {
             cout << "write write error" << endl;
-            exit(3);
+            pthread_exit(&ret);
         }
         cout << "write msg body success(" << conn_fd << ") msg=" << msg << ",len=" << ret << endl;
-
     }
 }
 
@@ -206,17 +208,17 @@ int onconnect() {
     //--等待线程结束
     void *s1 = NULL;
     void *s2 = NULL;
-    pthread_join(pid_1, &s1);
-    cout << "Thread 1 returns:" << (char *) s1 << endl;
-    //pthread_cancel(pid_2);
-    pthread_join(pid_2, &s2);
-    cout << "Thread 2 returns:" << (char *) s2 << endl;
+    if (pthread_join(pid_1, &s1) == 0 || pthread_join(pid_2, &s2) == 0) {
+        //pthread_cancel(pid_2);
+        cout << "Thread 1 returns:" << (char *) s1 << endl;
+        cout << "Thread 2 returns:" << (char *) s2 << endl;
+    }
 
     //close
     close(fd);
     delete myaddr;
 
-    return 0;
+    return 110;
 }
 
 int main(int argc, char *argv[]) {
@@ -238,6 +240,7 @@ int main(int argc, char *argv[]) {
     int status = -1;
     while ((pid = waitpid(-1, &status, 0)) >= 0) {
         if (WIFEXITED(status)) {
+            cout << pid << " (child process) terminated normally.\n";
             WEXITSTATUS(status);
         }
         cout << "catch signal SIGCHLD pid=" << pid << ",exit_status=" << status << endl;

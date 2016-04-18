@@ -54,8 +54,8 @@ void set_fd_nonblock(int fd) {
 
 int onaccept(const int listen_fd) {
     struct sockaddr_in cli_addr;
-    socklen_t addrlen = sizeof (struct sockaddr_in);
-    int conn_fd = accept(listen_fd, (struct sockaddr *) &cli_addr, &addrlen);
+    socklen_t addrlen = sizeof(struct sockaddr_in);
+    int conn_fd = accept(listen_fd, (struct sockaddr *)&cli_addr, &addrlen);
 
     //非阻塞模式
     set_fd_nonblock(conn_fd);
@@ -70,6 +70,8 @@ int onaccept(const int listen_fd) {
     }
     char tmp[256] = {'\0'};
     sprintf(tmp, "a new connection from client:fd=%d;client-ip=%s;client-port=%d", conn_fd, inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port));
+    cout << tmp << endl;
+
     //fortestuse
     struct sockaddr_in cli_addr2;
     getpeername(conn_fd, (struct sockaddr *) &cli_addr2, &addrlen);
@@ -151,6 +153,7 @@ int onread(const int conn_fd) {
             delete[] recv_msg[conn_fd];
             recv_msg[conn_fd] = NULL;
             used_size[conn_fd] = 0;
+            delete[] p; //does this work? 乱码
             p = NULL;
             return 0;
         } else {
