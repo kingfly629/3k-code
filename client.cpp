@@ -107,14 +107,14 @@ void *onread(void *args) {
         memset(msg, 0x0, sizeof (msg));
         int recv_len = read(conn_fd, msg, sizeof (msg));
         if (judge_recv(recv_len, conn_fd) < 0) {
-            ret = -1;
+            ret = -11;
             pthread_exit(&ret);
         }
 
         int body_len = atoi(msg);
         if (body_len < 0) {
             perror("head length < 0");
-            ret = -2;
+            ret = -12;
             pthread_exit(&ret);
         } else {
             cout << "recv head succ(fd=" << conn_fd << ") body_len:" << body_len << endl;
@@ -125,7 +125,7 @@ void *onread(void *args) {
             memset(msg, 0x0, sizeof (msg));
             recv_len = read(conn_fd, msg, sizeof (msg));
             if (judge_recv(recv_len, conn_fd) < 0) {
-                ret = -3;
+                ret = -13;
                 pthread_exit(&ret);
             } else if (judge_recv(recv_len, conn_fd) == 1) {
                 usleep(50000); //non-block use
@@ -160,7 +160,7 @@ void *onwrite(void *args) {
         int ret = send(conn_fd, msg, strlen(msg), 0);
         if (ret <= 0) {
             cout << "write error" << endl;
-            ret = -100;
+            ret = -20;
             pthread_exit(&ret);
         }
         cout << "write msg body success(" << conn_fd << ") msg=" << msg << ",len=" << ret << endl;
@@ -225,7 +225,8 @@ int onconnect() {
     close(fd);
     delete myaddr;
 
-    exit(3);
+    //exit(3);
+    return -4;
 }
 
 int main(int argc, char *argv[]) {
