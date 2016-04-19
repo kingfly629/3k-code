@@ -32,7 +32,7 @@ char *adjust_buf(char **buf, int index) {
     //剩余一个字节，则重新分配
     char *new_buf = *buf;
     cout << "buf=" << *buf << ";strlen(*buf)=" << strlen(*buf) << endl;
-    cout << "new_buf=" << new_buf << ";strlen(new_buf)=" << strlen(new_buf) << endl;
+    //cout << "new_buf=" << new_buf << ";strlen(new_buf)=" << strlen(new_buf) << endl;
     if (total_len[index] - used_size[index] <= 1) {
         total_len[index] *= 2;
         new_buf = new char[total_len[index]];
@@ -158,8 +158,8 @@ int onread(const int conn_fd) {
             delete[] recv_msg[conn_fd];
             recv_msg[conn_fd] = NULL;
             used_size[conn_fd] = 0;
-            cout << "after del recv_msg=" << recv_msg[conn_fd] << endl;
-            cout << "p=" << p << endl;
+            //cout << "after del recv_msg=" << recv_msg[conn_fd] << endl;
+            //cout << "p=" << p << endl;
             cout << endl;
             //delete[] p; //does this work? 乱码
             p = NULL;
