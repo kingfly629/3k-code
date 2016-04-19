@@ -90,6 +90,8 @@ int onread(const int conn_fd) {
     finish_flag[conn_fd] = false;
     if (recv_msg[conn_fd] == NULL) {
         recv_msg[conn_fd] = new char[INIT_BUF_SIZE];
+        cout<<"======new read======\n";
+        memset(recv_msg[conn_fd],0x0,INIT_BUF_SIZE);
         used_size[conn_fd] = 0;
         total_len[conn_fd] = INIT_BUF_SIZE;
     }
@@ -155,7 +157,7 @@ int onread(const int conn_fd) {
             //finish_flag[conn_fd] = false;
 
             //接收完数据释放
-            delete[] recv_msg[conn_fd];
+            delete[] (recv_msg[conn_fd]);
             recv_msg[conn_fd] = NULL;
             used_size[conn_fd] = 0;
             //cout << "after del recv_msg=" << recv_msg[conn_fd] << endl;
