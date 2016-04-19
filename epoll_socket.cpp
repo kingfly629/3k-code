@@ -41,7 +41,7 @@ char *adjust_buf(char **buf, int index) {
         //cout << "buf=" << *buf << ";strlen(*buf)=" << strlen(*buf) << endl;
         //cout << "new_buf=" << new_buf << ";strlen(new_buf)=" << strlen(new_buf) << endl;
         //strcpy(new_buf, *buf);
-        delete[] * buf;
+        delete[] (*buf);
         //*buf = NULL;
         *buf = new_buf;
     }
@@ -160,7 +160,7 @@ int onread(const int conn_fd) {
             used_size[conn_fd] = 0;
             //cout << "after del recv_msg=" << recv_msg[conn_fd] << endl;
             //cout << "p=" << p << endl;
-            cout << endl;
+            //cout << endl;
             //delete[] p; //does this work? 乱码
             p = NULL;
             return 0;
