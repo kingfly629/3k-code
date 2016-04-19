@@ -249,7 +249,8 @@ int main(int argc, char *argv[]) {
     while ((pid = waitpid(-1, &status, 0)) >= 0) {
         if (WIFEXITED(status)) {
             cout << "child process:" << pid << ";(exit code:" << status << ") terminated normally.\n";
-            WEXITSTATUS(status);
+            cout << "child process:" << pid << ";(exit code:" << WEXITSTATUS(status) << ") terminated normally.\n";
+            //WEXITSTATUS(status);
         }
         cout << "catch signal SIGCHLD pid=" << pid << ",exit_status=" << status << endl;
         pid_t a;
