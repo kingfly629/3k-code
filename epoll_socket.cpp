@@ -28,31 +28,36 @@ int used_size[NUM];
 bool finish_flag[NUM];
 int epoll_fd = -1;
 
-char *adjust_buf(char **buf, int index) {
-    //剩余一个字节，则重新分配
-    char *new_buf = *buf;
-    cout << "buf=" << *buf << ";strlen(*buf)=" << strlen(*buf) << endl;
-    //cout << "new_buf=" << new_buf << ";strlen(new_buf)=" << strlen(new_buf) << endl;
-    if (total_len[index] - used_size[index] <= 1) {
-        total_len[index] *= 2;
-        new_buf = new char[total_len[index]];
-        memset(new_buf, 0x0, total_len[index]);
-        ::memcpy(new_buf, *buf, strlen(*buf));
-        //cout << "buf=" << *buf << ";strlen(*buf)=" << strlen(*buf) << endl;
-        //cout << "new_buf=" << new_buf << ";strlen(new_buf)=" << strlen(new_buf) << endl;
-        //strcpy(new_buf, *buf);
-        delete[] (*buf);
-        //*buf = NULL;
-        *buf = new_buf;
-    }
-    return new_buf;
-}
-
 void set_fd_nonblock(int fd) {
 
     int flags = fcntl(fd, F_GETFL, 0);
     if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) != 0) {
         perror("F_SETFL ERROR");
+    }
+}
+
+char *adjust_buf(char **buf, int index) {
+    //剩余一个字节，则重新分配
+    char *new_buf = *buf;
+    //cout << "buf=" << *buf << ";strlen(*buf)=" << strlen(*buf) << endl;
+    if (total_len[index] - used_size[index] <= 1) {
+        total_len[index] *= 2;
+        new_buf = new char[total_len[index]];
+        memset(new_buf, 0x0, total_len[index]);
+        ::memcpy(new_buf, *buf, strlen(*buf));
+        //strcpy(new_buf, *buf);//这个没有长度，如果源src没有结尾符就危险了
+        *buf = new_buf;
+    }
+    return new_buf;
+}
+
+//释放字符串空间
+
+void release_buf(const int fd) {
+    if (recv_msg[fd] != NULL) {
+        delete[] (recv_msg[fd]);
+        recv_msg[fd] = NULL;
+        used_size[fd] = 0;
     }
 }
 
@@ -76,11 +81,11 @@ int onaccept(const int listen_fd) {
     sprintf(tmp, "a new connection from client:fd=%d;client-ip=%s;client-port=%d", conn_fd, inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port));
     cout << tmp << endl;
 
-    //fortestuse
-    struct sockaddr_in cli_addr2;
-    getpeername(conn_fd, (struct sockaddr *) &cli_addr2, &addrlen);
-    sprintf(tmp, "client:fd=%d;client-ip=%s;client-port=%d", conn_fd, inet_ntoa(cli_addr2.sin_addr), ntohs(cli_addr2.sin_port));
-    cout << tmp << endl;
+    //    //fortestuse
+    //    struct sockaddr_in cli_addr2;
+    //    getpeername(conn_fd, (struct sockaddr *) &cli_addr2, &addrlen);
+    //    sprintf(tmp, "client:fd=%d;client-ip=%s;client-port=%d", conn_fd, inet_ntoa(cli_addr2.sin_addr), ntohs(cli_addr2.sin_port));
+    //    cout << tmp << endl;
     return conn_fd;
 }
 
@@ -90,17 +95,15 @@ int onread(const int conn_fd) {
     finish_flag[conn_fd] = false;
     if (recv_msg[conn_fd] == NULL) {
         recv_msg[conn_fd] = new char[INIT_BUF_SIZE];
-        cout<<"======new read======\n";
-        memset(recv_msg[conn_fd],0x0,INIT_BUF_SIZE);
+        memset(recv_msg[conn_fd], 0x0, INIT_BUF_SIZE);
         used_size[conn_fd] = 0;
         total_len[conn_fd] = INIT_BUF_SIZE;
     }
     while (1) {
         char *p = adjust_buf(&recv_msg[conn_fd], conn_fd);
-        cout << "p=" << p << ";strlen(p)=" << strlen(p) << endl;
+        //cout << "p=" << p << ";strlen(p)=" << strlen(p) << endl;
         cout << "conn_fd=" << conn_fd << ",total_len=" << total_len[conn_fd] << ",used_size=" << used_size[conn_fd] << endl;
         int recv_len = read(conn_fd, p + used_size[conn_fd], total_len[conn_fd] - used_size[conn_fd] - 1);
-        //recv_msg[conn_fd] = p;
         //-1- 异常
         if (recv_len < 0) {
             //non-block use
@@ -111,6 +114,7 @@ int onread(const int conn_fd) {
                 int ret = epoll_ctl(epoll_fd, EPOLL_CTL_MOD, conn_fd, &ev);
                 if (ret != 0) {
                     perror("epoll ctl error");
+                    release_buf(conn_fd);
                     return -1;
                 }
                 return 0;
@@ -120,10 +124,12 @@ int onread(const int conn_fd) {
             int ret = epoll_ctl(epoll_fd, EPOLL_CTL_DEL, conn_fd, &ev);
             if (ret != 0) {
                 perror("epoll ctl error");
+                release_buf(conn_fd);
                 return -2;
             }
             shutdown(conn_fd, SHUT_RDWR); //0 succ
             close(conn_fd);
+            release_buf(conn_fd);
             return -3;
         } else if (recv_len == 0) {
             //-2- 对端关闭
@@ -132,18 +138,20 @@ int onread(const int conn_fd) {
             int ret = epoll_ctl(epoll_fd, EPOLL_CTL_DEL, conn_fd, &ev);
             if (ret != 0) {
                 perror("epoll ctl error");
+                release_buf(conn_fd);
                 return -4;
             }
             shutdown(conn_fd, SHUT_RDWR); //0 succ
             close(conn_fd);
+            release_buf(conn_fd);
             return -5;
         }
 
         ev.data.fd = conn_fd;
         //-3- 判断是否读完
-        cout << "judge end:" << (p + used_size[conn_fd] + recv_len - 2) << endl;
-        if (strncmp(p + used_size[conn_fd] + recv_len - 2, "nn", 2) == 0) {
-            p[used_size[conn_fd] + recv_len - 2] = '\0';
+        //cout << "judge end:" << (p + used_size[conn_fd] + recv_len - 4) << endl;
+        if (strncmp(p + used_size[conn_fd] + recv_len - 4, "\r\n\r\n", 4) == 0) {
+            p[used_size[conn_fd] + recv_len - 4] = '\0';
             finish_flag[conn_fd] = true;
         }
         if (finish_flag[conn_fd]) {
@@ -152,18 +160,12 @@ int onread(const int conn_fd) {
             int ret = epoll_ctl(epoll_fd, EPOLL_CTL_MOD, conn_fd, &ev);
             if (ret != 0) {
                 perror("epoll ctl error read");
+                release_buf(conn_fd);
                 return -6;
             }
-            //finish_flag[conn_fd] = false;
 
             //接收完数据释放
-            delete[] (recv_msg[conn_fd]);
-            recv_msg[conn_fd] = NULL;
-            used_size[conn_fd] = 0;
-            //cout << "after del recv_msg=" << recv_msg[conn_fd] << endl;
-            //cout << "p=" << p << endl;
-            //cout << endl;
-            //delete[] p; //does this work? 乱码
+            release_buf(conn_fd);
             p = NULL;
             return 0;
         } else {
@@ -173,11 +175,13 @@ int onread(const int conn_fd) {
             int ret = epoll_ctl(epoll_fd, EPOLL_CTL_MOD, conn_fd, &ev);
             if (ret != 0) {
                 perror("epoll ctl error read");
+                release_buf(conn_fd);
                 return -7;
             }
         }
     }//while
 
+    release_buf(conn_fd);
     return -8;
 }
 
@@ -201,7 +205,6 @@ int onwrite(const char *msg, const int fd) {
     do {
         write_len = write(fd, msg + cur_pos, 8);
         if (write_len == -1) {
-            //cout << "write error fd=" << fd << ":" << errno << "-" << strerror(errno) << endl;
             perror("write error:");
             return -2;
         } else {

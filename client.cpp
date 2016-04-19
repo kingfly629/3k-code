@@ -1,4 +1,3 @@
-//--client.cpp
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -33,23 +32,23 @@ int getIpbyHostName(char *ip) {
         return -1;
     }
 
-    printf("hostname:%s\n", hostname);
+    //printf("hostname:%s\n", hostname);
     if ((hptr = gethostbyname(hostname)) == NULL) {
         printf(" gethostbyname error for host:%s\n", hostname);
         return -2;
     }
 
     printf("official hostname:%s\n", hptr->h_name);
-    for (pptr = hptr->h_aliases; *pptr != NULL; pptr++)
-        printf(" alias:%s\n", *pptr);
+    //    for (pptr = hptr->h_aliases; *pptr != NULL; pptr++)
+    //        printf(" alias:%s\n", *pptr);
 
     switch (hptr->h_addrtype) {
         case AF_INET:
         case AF_INET6:
             pptr = hptr->h_addr_list;
-            for (; *pptr != NULL; pptr++)
-                printf(" address:%s\n",
-                    inet_ntop(hptr->h_addrtype, *pptr, str, sizeof (str)));
+            //            for (; *pptr != NULL; pptr++)
+            //                printf(" address:%s\n",
+            //                    inet_ntop(hptr->h_addrtype, *pptr, str, sizeof (str)));
             ip = (char *) inet_ntop(hptr->h_addrtype, hptr->h_addr, str, sizeof (str));
             //应该需要拷贝？？
             if (ip == NULL) {
@@ -163,7 +162,7 @@ void *onwrite(void *args) {
             ret = -20;
             pthread_exit(&ret);
         }
-        cout << "write msg body success(" << conn_fd << ") msg=" << msg << ",len=" << ret << endl;
+        cout << "write msg success(" << conn_fd << ") msg=" << msg << ",len=" << ret << endl;
     }
 }
 
@@ -210,23 +209,18 @@ int onconnect() {
     void *s1 = NULL;
     void *s2 = NULL;
 
-    //若是在整个程序退出时，要终止各个线程，
-    //应该在成功发送 CANCEL 指令后，使用 pthread_join 函数，等待指定的线程已经完全退出以后，再继续执行；
-    //否则，很容易产生 “段错误”。
+    //若是在整个程序退出时，要终止各个线程，应该在成功发送 CANCEL 指令后，使用 pthread_join 函数，等待指定的线程已经完全退出以后，再继续执行；否则，很容易产生 “段错误”。
     //pthread_cancel(pid_2);
 
     pthread_join(pid_2, &s2);
     cout << "Thread 2 returns:" << (int) (*((int *) s2)) << endl;
 
-    //    pthread_join(pid_1, &s1);
-    //    cout << "Thread 1 returns:" << (int) (*((int *) s1)) << endl;
-
     //close
     close(fd);
     delete myaddr;
 
-    //exit(5);
-    return 4;
+    exit(5);
+    //return 4;
 }
 
 int main(int argc, char *argv[]) {
@@ -234,9 +228,9 @@ int main(int argc, char *argv[]) {
 
     pid_t pid;
     if ((pid = fork()) > 0) {
-        cout << "in parent ...\n";
+        //cout << "in parent ...\n";
     } else if (pid == 0) {
-        cout << "in child ...\n";
+        //cout << "in child ...\n";
         onconnect();
     } else {
         cout << "fork error ...\n";
@@ -250,11 +244,11 @@ int main(int argc, char *argv[]) {
         //正常退出
         if (WIFEXITED(status)) {
             cout << "child process:" << pid << "(exit code:" << WEXITSTATUS(status) << ") terminated normally.\n";
-            cout << "child process:" << pid << "(exit code:" << status << ") terminated normally.\n";
-            //WEXITSTATUS(status);
+            //cout << "catch signal SIGCHLD pid=" << pid << ",exit_status=" << WEXITSTATUS(status) << endl;
+        } else {
+            cout << "catch signal SIGCHLD pid=" << pid << ",exit_status=" << status << endl;
         }
-        cout << "catch signal SIGCHLD pid=" << pid << ",exit_status=" << WEXITSTATUS(status) << endl;
-        cout << "catch signal SIGCHLD pid=" << pid << ",exit_status=" << status << endl;
+
         pid_t a;
         a = fork();
         if (a == 0) {
@@ -262,7 +256,6 @@ int main(int argc, char *argv[]) {
             onconnect();
             sleep(5);
         }
-
     }
 
     return 0;
