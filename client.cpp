@@ -225,8 +225,8 @@ int onconnect() {
     close(fd);
     delete myaddr;
 
-    exit(5);
-    //return -4;
+    //exit(5);
+    return 4;
 }
 
 int main(int argc, char *argv[]) {
