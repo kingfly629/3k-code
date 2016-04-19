@@ -218,15 +218,15 @@ int onconnect() {
     pthread_join(pid_2, &s2);
     cout << "Thread 2 returns:" << (int) (*((int *) s2)) << endl;
 
-//    pthread_join(pid_1, &s1);
-//    cout << "Thread 1 returns:" << (int) (*((int *) s1)) << endl;
+    //    pthread_join(pid_1, &s1);
+    //    cout << "Thread 1 returns:" << (int) (*((int *) s1)) << endl;
 
     //close
     close(fd);
     delete myaddr;
 
-    //exit(3);
-    return -4;
+    exit(3);
+    //return -4;
 }
 
 int main(int argc, char *argv[]) {
@@ -247,9 +247,10 @@ int main(int argc, char *argv[]) {
 
     int status = -1;
     while ((pid = waitpid(-1, &status, 0)) >= 0) {
+        //正常退出
         if (WIFEXITED(status)) {
-            cout << "child process:" << pid << ";(exit code:" << status << ") terminated normally.\n";
             cout << "child process:" << pid << ";(exit code:" << WEXITSTATUS(status) << ") terminated normally.\n";
+            //cout << "child process:" << pid << ";(exit code:" << status << ") terminated normally.\n";
             //WEXITSTATUS(status);
         }
         cout << "catch signal SIGCHLD pid=" << pid << ",exit_status=" << status << endl;
