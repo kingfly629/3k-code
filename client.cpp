@@ -206,19 +206,28 @@ int onconnect() {
     pthread_create(&pid_2, NULL, onread, &fd);
 
     //--等待线程结束
-    void *s1 = NULL;
-    void *s2 = NULL;
-    if (pthread_join(pid_1, &s1) == 0 || pthread_join(pid_2, &s2) == 0) {
-        //pthread_cancel(pid_2);
-        cout << "Thread 1 returns:" << (int) (*((int *) s1)) << endl;
-        cout << "Thread 2 returns:" << (int) (*((int *) s2)) << endl;
-    }
+    //    void *s1 = NULL;
+    //    void *s2 = NULL;
+    int s1 = -1;
+    int s2 = -1;
+
+    //若是在整个程序退出时，要终止各个线程，
+    //应该在成功发送 CANCEL 指令后，使用 pthread_join 函数，等待指定的线程已经完全退出以后，再继续执行；
+    //否则，很容易产生 “段错误”。
+    //pthread_cancel(pid_2);
+
+    pthread_join(pid_2, (void*) (&s2));
+    //cout << "Thread 2 returns:" << (int) (*((int *) s2)) << endl;
+    cout << "Thread 2 returns:" << s2 << endl;
+
+    pthread_join(pid_1, (void*) (&s1));
+    cout << "Thread 1 returns:" << s1 << endl;
 
     //close
     close(fd);
     delete myaddr;
 
-    exit(110);
+    exit(3);
 }
 
 int main(int argc, char *argv[]) {
