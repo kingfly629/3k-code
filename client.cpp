@@ -20,6 +20,7 @@ using std::endl;
 using std::string;
 
 #define SERVER_PORT 4444
+int ret = 0; //线程返回值
 
 int getIpbyHostName(char *ip) {
     char **pptr;
@@ -99,7 +100,6 @@ void *onread(void *args) {
     int conn_fd = (int) (*((int*) args));
     char msg[8];
     string recv_msg;
-    int ret = 0;
 
     while (true) {
         recv_msg.clear();
@@ -151,7 +151,7 @@ void *onread(void *args) {
 void *onwrite(void *args) {
     int conn_fd = (int) (*((int*) args));
     char head_len[8];
-    int ret = 13;
+
     while (1) {
         char msg[1024];
         cout << "input the msg to send(1024 bytes max):\n";
@@ -160,6 +160,7 @@ void *onwrite(void *args) {
         int ret = send(conn_fd, msg, strlen(msg), 0);
         if (ret <= 0) {
             cout << "write error" << endl;
+            ret = -100;
             pthread_exit(&ret);
         }
         cout << "write msg body success(" << conn_fd << ") msg=" << msg << ",len=" << ret << endl;
@@ -206,22 +207,19 @@ int onconnect() {
     pthread_create(&pid_2, NULL, onread, &fd);
 
     //--等待线程结束
-    //    void *s1 = NULL;
-    //    void *s2 = NULL;
-    int s1 = -1;
-    int s2 = -1;
+    void *s1 = NULL;
+    void *s2 = NULL;
 
     //若是在整个程序退出时，要终止各个线程，
     //应该在成功发送 CANCEL 指令后，使用 pthread_join 函数，等待指定的线程已经完全退出以后，再继续执行；
     //否则，很容易产生 “段错误”。
     //pthread_cancel(pid_2);
 
-    pthread_join(pid_2, (void*) (&s2));
-    //cout << "Thread 2 returns:" << (int) (*((int *) s2)) << endl;
-    cout << "Thread 2 returns:" << s2 << endl;
+    pthread_join(pid_2, &s2);
+    cout << "Thread 2 returns:" << (int) (*((int *) s2)) << endl;
 
-    pthread_join(pid_1, (void*) (&s1));
-    cout << "Thread 1 returns:" << s1 << endl;
+    pthread_join(pid_1, &s1);
+    cout << "Thread 1 returns:" << (int) (*((int *) s1)) << endl;
 
     //close
     close(fd);
