@@ -225,7 +225,7 @@ int onconnect() {
     close(fd);
     delete myaddr;
 
-    exit(3);
+    exit(5);
     //return -4;
 }
 
@@ -249,10 +249,11 @@ int main(int argc, char *argv[]) {
     while ((pid = waitpid(-1, &status, 0)) >= 0) {
         //正常退出
         if (WIFEXITED(status)) {
-            cout << "child process:" << pid << ";(exit code:" << WEXITSTATUS(status) << ") terminated normally.\n";
-            //cout << "child process:" << pid << ";(exit code:" << status << ") terminated normally.\n";
+            cout << "child process:" << pid << "(exit code:" << WEXITSTATUS(status) << ") terminated normally.\n";
+            cout << "child process:" << pid << "(exit code:" << status << ") terminated normally.\n";
             //WEXITSTATUS(status);
         }
+        cout << "catch signal SIGCHLD pid=" << pid << ",exit_status=" << WEXITSTATUS(status) << endl;
         cout << "catch signal SIGCHLD pid=" << pid << ",exit_status=" << status << endl;
         pid_t a;
         a = fork();
