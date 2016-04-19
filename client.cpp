@@ -218,8 +218,8 @@ int onconnect() {
     pthread_join(pid_2, &s2);
     cout << "Thread 2 returns:" << (int) (*((int *) s2)) << endl;
 
-    pthread_join(pid_1, &s1);
-    cout << "Thread 1 returns:" << (int) (*((int *) s1)) << endl;
+//    pthread_join(pid_1, &s1);
+//    cout << "Thread 1 returns:" << (int) (*((int *) s1)) << endl;
 
     //close
     close(fd);
