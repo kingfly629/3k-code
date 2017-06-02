@@ -1,23 +1,21 @@
-//remove from list
+//remove from vector
 #include <iostream>
-#include <list>
+#include <vector>
 
 int main ()
 {
-	int myints[]= {17,89,7,14};
-	std::list<int> mylist (myints,myints+4);
+	std::vector<int> myvector ;
+        std::vector<int> myvector2 ;
+        myvector[] = 100;
+        myvector.push_back(200);
+        myvector.insert(myvector.begin(),2,2);
+        myvector.insert(myvector.begin(),1);
+	
+        myvector2.insert(myvector2.begin(),myvector.begin(),myvector.end());
 
-	//mylist.remove(89);
-
-	std::cout << "mylist contains:";
-	for (std::list<int>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
+	std::cout << "myvector contains:";
+	for (std::vector<int>::iterator it=myvector2.begin(); it!=myvector2.end(); ++it)
 	{	std::cout << ' ' << *it;
-		if (*it == 89)
-		{ 
-			//int tmp = *it;
-			//mylist.remove(tmp);
-			mylist.erase(it);
-		}
 	}
 	std::cout << '\n';
 
