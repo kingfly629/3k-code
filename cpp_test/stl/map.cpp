@@ -16,13 +16,14 @@ int main ()
             mymap2[k] = k;
         }
         
-        mymap2.insert(make_pair(10,10));
+        mymap2.insert(std::make_pair(10,10));
 	
         mymap2.insert(mymap.begin(),mymap.end());
 
 	std::cout << "mymap contains:";
-	for (std::map<int>::iterator it=mymap2.begin(); it!=mymap2.end(); ++it)
-	{	std::cout << ' ' << *it;
+	for (std::map<int, int>::iterator it=mymap2.begin(); it!=mymap2.end(); ++it)
+	{	
+		std::cout << ' ' << it->second;
 	}
 	std::cout << '\n';
 
