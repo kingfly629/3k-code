@@ -20,6 +20,8 @@ int main ()
 	
         mymap2.insert(mymap.begin(),mymap.end());
 
+        mymap2.erase(1);
+        mymap2.erase(mymap2.begin()+2);
 	std::cout << "mymap contains:";
 	for (std::map<int, int>::iterator it=mymap2.begin(); it!=mymap2.end(); ++it)
 	{	
