@@ -1,0 +1,3 @@
+/home/wangjj/github/cpp_test/cmake_test/CMakeFiles/bin/test_PS.dir
+/home/wangjj/github/cpp_test/cmake_test/CMakeFiles/edit_cache.dir
+/home/wangjj/github/cpp_test/cmake_test/CMakeFiles/rebuild_cache.dir
