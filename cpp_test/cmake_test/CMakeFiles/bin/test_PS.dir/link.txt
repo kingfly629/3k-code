@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/bin/test_PS.dir/src/test.cpp.o  -o bin/test_PS  -L/usr/local/lib 
