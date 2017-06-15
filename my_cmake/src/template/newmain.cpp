@@ -14,11 +14,9 @@
  */
 int main(int argc, char** argv) {
 	try {
-		std::cout << "wtk" << std::endl;
-		//templateClass<char> *test = new templateClass<char>;
-		//delete test;
-		//templateClass<char> *test2 = new templateClass<char> (200);
-		templateClass<char> test3;
+		std::cout << "====== wtk ======" << std::endl;
+		templateClass<char> *test = new templateClass<char>('e');
+		delete test;
 	} catch (std::exception const& ex) {
 		std::cerr << "Exception: " << ex.what() << std::endl;
 		return -1;
