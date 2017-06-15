@@ -1,6 +1,8 @@
-vector:vector.o
-	g++ -o bin/vector obj/vector.o
-vector.o:src/stl/vector.cpp
-	g++ -c -o obj/vector.o src/stl/vector.cpp
+test:test.o tes.o
+	g++ -o bin/test obj/test.o obj/tes.o
+test.o:src/template/newmain.cpp
+	g++ -c -o obj/test.o src/template/newmain.cpp
+tes.o:src/template/templateClass.cpp
+	g++ -c -o obj/tes.o src/template/templateClass.cpp
 clean:
-	rm -rf obj/vector.o bin/vector
+	rm -rf obj/test.o obj/tes.o bin/test

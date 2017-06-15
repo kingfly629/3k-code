@@ -8,6 +8,8 @@
 #include "templateClass.h"
 #include <iostream>
 
+template class templateClass<char>;
+
 template<class T>
 templateClass<T>::templateClass() {
 	this->m_k = 100;
