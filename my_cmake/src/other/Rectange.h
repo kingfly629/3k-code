@@ -12,12 +12,21 @@
 
 class Point {
 public:
+    Point() {
+        std::cout << "Point default construct..." << std::endl;
+    }
 
     Point(float _x, float _y) {
+        std::cout << "Point here parameter construct..." << std::endl;
         x = _x;
         y = _y;
     }
-    Point(const Point& orig);
+
+    Point(const Point& orig) {
+        std::cout << "Point here copy construct..." << std::endl;
+        x = orig.x;
+        y = orig.y;
+    }
 
     float getX() const {
         return x;
@@ -37,14 +46,16 @@ private:
 
 class Rectange {
 public:
-    Rectange(const Point &bottomLeftPoint, const Point& topRightPoint);
-    Rectange(const Rectange& orig);
+    Rectange();
+    Rectange(const Point &bottomLeftPoint, const Point &topRightPoint);
+    //Rectange(const Rectange& orig);
+    //const Rectange& operator =(const Rectange& orig);
+    virtual ~Rectange();
     Point TopRightPoint() const;
-    Point TopLeftPoint() const;
+    void TopLeftPoint() const;
     Point BottomRightPoint() const;
     Point BottomLeftPoint() const;
     float Area() const;
-    virtual ~Rectange();
 private:
     float m_TopRightX;
     float m_TopRightY;

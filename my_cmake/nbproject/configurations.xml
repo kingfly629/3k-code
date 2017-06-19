@@ -30,6 +30,8 @@
           <in>ext.cpp</in>
           <in>extern.cpp</in>
           <in>getHostByName.cpp</in>
+          <in>myfriend.cpp</in>
+          <in>myfriend.h</in>
           <in>new_line.cpp</in>
           <in>print.c</in>
           <in>print.cpp</in>
@@ -184,6 +186,10 @@
       <item path="src/other/extern.cpp" ex="false" tool="1" flavor2="4">
       </item>
       <item path="src/other/getHostByName.cpp" ex="false" tool="1" flavor2="4">
+      </item>
+      <item path="src/other/myfriend.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/other/myfriend.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/other/new_line.cpp" ex="false" tool="1" flavor2="4">
       </item>

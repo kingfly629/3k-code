@@ -7,25 +7,44 @@
 
 #include "Rectange.h"
 
-Rectange::Rectange(const Point &bottomLeftPoint, const Point& topRightPoint) {
+Rectange::Rectange() {
+	std::cout << "here self-define default construct..." << std::endl;
+}
+
+Rectange::Rectange(const Point &bottomLeftPoint,const Point &topRightPoint) {
+	std::cout << "here parameter construct..." << std::endl;
 	m_TopRightX = topRightPoint.getX();
 	m_TopRightY = topRightPoint.getY();
 	m_BottomLeftX = bottomLeftPoint.getX();
 	m_BottomLeftY = bottomLeftPoint.getY();
 }
 
-Rectange::Rectange(const Rectange& orig) {
-}
+//Rectange::Rectange(const Rectange& orig) {
+//	std::cout << "here copy construct..." << std::endl;
+////	this->m_TopRightX = orig.m_TopRightX;
+////	this->m_TopRightY = orig.m_TopRightY;
+////	this->m_BottomLeftX = orig.m_BottomLeftX;
+////	this->m_BottomLeftY = orig.m_BottomLeftY;
+//}
+
+//const Rectange& Rectange::operator =(const Rectange& orig) {
+//	std::cout << "here equal construct..." << std::endl;
+//	this->m_TopRightX = orig.m_TopRightX;
+//	this->m_TopRightY = orig.m_TopRightY;
+//	this->m_BottomLeftX = orig.m_BottomLeftX;
+//	this->m_BottomLeftY = orig.m_BottomLeftY;
+//	return *this;
+//}
 
 Rectange::~Rectange() {
 }
 
-Point Rectange::TopRightPoint() const{
+Point Rectange::TopRightPoint() const {
 	return Point(m_TopRightX, m_TopRightY);
 }
 
-Point Rectange::TopLeftPoint() const {
-	return Point(m_BottomLeftX, m_TopRightY);
+void Rectange::TopLeftPoint() const {
+	Point Point2(m_BottomLeftX, m_TopRightY);
 }
 
 Point Rectange::BottomRightPoint() const {

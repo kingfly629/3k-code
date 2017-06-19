@@ -34,11 +34,14 @@
           <in>ext.cpp</in>
           <in>extern.cpp</in>
           <in>getHostByName.cpp</in>
+          <in>myfriend.cpp</in>
+          <in>myfriend.h</in>
           <in>new_line.cpp</in>
           <in>print.c</in>
           <in>print.cpp</in>
           <in>rectange.cpp</in>
           <in>signal.cpp</in>
+          <in>test.cpp</in>
         </df>
         <df name="socket">
           <in>client.cpp</in>
