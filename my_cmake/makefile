@@ -1,8 +1,8 @@
-test:test.o tes.o
-	g++ -o bin/test obj/test.o obj/tes.o
-test.o:src/template/newmain.cpp
-	g++ -c -o obj/test.o src/template/newmain.cpp
-tes.o:src/template/templateClass.cpp
-	g++ -c -o obj/tes.o src/template/templateClass.cpp
+test:test.o Rectange.o
+	g++ -o bin/test obj/test.o obj/Rectange.o
+test.o:src/other/test.cpp
+	g++ -c -o obj/test.o src/other/test.cpp
+Rectange.o:src/other/Rectange.cpp
+	g++ -c -o obj/Rectange.o src/other/Rectange.cpp
 clean:
-	rm -rf obj/test.o obj/tes.o bin/test
+	rm -rf obj/test.o obj/Rectange.o bin/test

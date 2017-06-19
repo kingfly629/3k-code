@@ -29,12 +29,15 @@
           <in>epoll_socket.cpp</in>
         </df>
         <df name="other">
+          <in>Rectange.cpp</in>
+          <in>Rectange.h</in>
           <in>ext.cpp</in>
           <in>extern.cpp</in>
           <in>getHostByName.cpp</in>
           <in>new_line.cpp</in>
           <in>print.c</in>
           <in>print.cpp</in>
+          <in>rectange.cpp</in>
           <in>signal.cpp</in>
         </df>
         <df name="socket">
@@ -48,6 +51,7 @@
           <in>map.cpp</in>
           <in>map_value_comp.cpp</in>
           <in>vector.cpp</in>
+          <in>vector_2.cpp</in>
         </df>
         <df name="template">
           <in>newmain.cpp</in>

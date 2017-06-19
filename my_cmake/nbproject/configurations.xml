@@ -25,12 +25,15 @@
           <in>epoll_socket.cpp</in>
         </df>
         <df name="other">
+          <in>Rectange.cpp</in>
+          <in>Rectange.h</in>
           <in>ext.cpp</in>
           <in>extern.cpp</in>
           <in>getHostByName.cpp</in>
           <in>new_line.cpp</in>
           <in>print.c</in>
           <in>print.cpp</in>
+          <in>rectange.cpp</in>
           <in>signal.cpp</in>
         </df>
         <df name="socket">
@@ -44,6 +47,7 @@
           <in>map.cpp</in>
           <in>map_value_comp.cpp</in>
           <in>vector.cpp</in>
+          <in>vector_2.cpp</in>
         </df>
         <df name="template">
           <in>newmain.cpp</in>
@@ -79,7 +83,7 @@
           <buildCommandWorkingDir>.</buildCommandWorkingDir>
           <buildCommand>${MAKE} -f Makefile</buildCommand>
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
-          <executablePath></executablePath>
+          <executablePath>bin\test.exe</executablePath>
         </makeTool>
       </makefileType>
       <folder path="0/src/cpp_20170602">
@@ -171,6 +175,10 @@
       </item>
       <item path="src/epoll/epoll_socket.cpp" ex="false" tool="1" flavor2="4">
       </item>
+      <item path="src/other/Rectange.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/other/Rectange.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/other/ext.cpp" ex="false" tool="1" flavor2="4">
       </item>
       <item path="src/other/extern.cpp" ex="false" tool="1" flavor2="4">
@@ -182,6 +190,8 @@
       <item path="src/other/print.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="src/other/print.cpp" ex="false" tool="1" flavor2="4">
+      </item>
+      <item path="src/other/rectange.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/other/signal.cpp" ex="false" tool="1" flavor2="4">
       </item>
@@ -200,6 +210,8 @@
       <item path="src/stl/map_value_comp.cpp" ex="false" tool="1" flavor2="4">
       </item>
       <item path="src/stl/vector.cpp" ex="false" tool="1" flavor2="4">
+      </item>
+      <item path="src/stl/vector_2.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/template/newmain.cpp" ex="false" tool="1" flavor2="4">
       </item>
