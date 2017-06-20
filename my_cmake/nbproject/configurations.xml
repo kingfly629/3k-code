@@ -49,13 +49,11 @@
           <in>map.cpp</in>
           <in>map_value_comp.cpp</in>
           <in>vector.cpp</in>
-          <in>vector_2.cpp</in>
         </df>
         <df name="template">
           <in>newmain.cpp</in>
           <in>templateClass.cpp</in>
         </df>
-        <in>test.cpp</in>
       </df>
     </df>
     <logicalFolder name="ExternalFiles"
@@ -217,18 +215,9 @@
       </item>
       <item path="src/stl/vector.cpp" ex="false" tool="1" flavor2="4">
       </item>
-      <item path="src/stl/vector_2.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="src/template/newmain.cpp" ex="false" tool="1" flavor2="4">
       </item>
       <item path="src/template/templateClass.cpp" ex="false" tool="1" flavor2="4">
-      </item>
-      <item path="src/test.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool>
-          <incDir>
-            <pElem>src</pElem>
-          </incDir>
-        </ccTool>
       </item>
     </conf>
   </confs>

@@ -9,16 +9,31 @@
 #define	MYFRIEND_H
 #include <iostream>
 
-class myfriend {
-public:
-    myfriend(int a);
-    myfriend(const myfriend& orig);
-    friend void PrintInfo(const myfriend& obj);
-    virtual ~myfriend();
-private:
-    int x;
-};
+namespace kkk {
 
+    class myfriend {
+    public:
+        myfriend(int a = 1);
+        myfriend(const myfriend& orig);
+        myfriend& operator=(const myfriend& orig);
+        friend void friend_PrintInfo(const myfriend& obj);
+        friend class classB;
+        virtual ~myfriend();
+    private:
+        int x;
+    };
 
+    class classB {
+    public:
+        classB(myfriend &_a);
+        classB(const classB& orig);
+        virtual ~classB();
+        void test();
+    private:
+        myfriend a;
+        int x;
+    };
+
+}
 #endif	/* MYFRIEND_H */
 

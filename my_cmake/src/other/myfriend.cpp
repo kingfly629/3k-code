@@ -7,12 +7,37 @@
 
 #include "myfriend.h"
 
-myfriend::myfriend(int a) {
-	x = a;
-}
+namespace kkk {
 
-myfriend::myfriend(const myfriend& orig) {
-}
+	myfriend::myfriend(int a) {
+		std::cout << "myfriend here parameter construct..." << std::endl;
+		x = a;
+	}
 
-myfriend::~myfriend() {
+	myfriend::myfriend(const myfriend& orig) {
+		std::cout << "myfriend here copy construct..." << std::endl;
+		this->x = orig.x;
+	}
+
+	myfriend& myfriend::operator=(const myfriend& orig) {
+		std::cout << "myfriend here equal construct..." << std::endl;
+		this->x = orig.x;
+		return *this;
+	}
+
+	myfriend::~myfriend() {
+	}
+
+	classB::classB(myfriend &_a) : a(_a) {
+	}
+
+	classB::classB(const classB& orig) {
+	}
+
+	classB::~classB() {
+	}
+
+	void classB::test() {
+		std::cout << "here friend class:" << a.x << std::endl;
+	}
 }

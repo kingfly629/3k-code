@@ -2,14 +2,17 @@
 #include "myfriend.h"
 #include <iostream>
 
+using namespace kkk;
 //class b {
 //	char i;
 //	char k;
 //	int d;
 //};
 
-void PrintInfo(const myfriend& obj) {
-	std::cout << "here friend function.:" << obj.x << std::endl;
+namespace kkk {
+	void friend_PrintInfo(const myfriend& obj) {
+		std::cout << "here friend function:" << obj.x << std::endl;
+	}
 }
 
 int main(void) {
@@ -29,9 +32,17 @@ int main(void) {
 	//	temp.PrintInfo();
 	//	std::cout << "Area = " << myRect.Area() << std::endl;
 
+	std::cout << "======================" << std::endl;
+	
 	//2- friend function
 	myfriend obj(3);
-	PrintInfo(obj);
+	friend_PrintInfo(obj);
 
+	std::cout << "======================" << std::endl;
+	
+	//3- friend class
+	//myfriend obj(3);
+	classB b(obj);
+	b.test();
 	return 0;
 }

@@ -54,14 +54,12 @@
           <in>map.cpp</in>
           <in>map_value_comp.cpp</in>
           <in>vector.cpp</in>
-          <in>vector_2.cpp</in>
         </df>
         <df name="template">
           <in>newmain.cpp</in>
           <in>templateClass.cpp</in>
           <in>templateClass.h</in>
         </df>
-        <in>test.cpp</in>
       </df>
     </df>
   </logicalFolder>
