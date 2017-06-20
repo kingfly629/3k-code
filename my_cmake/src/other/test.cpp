@@ -3,6 +3,8 @@
 #include <iostream>
 
 using namespace kkk;
+
+#define FUNC(X,Y) X*Y-Y
 //class b {
 //	char i;
 //	char k;
@@ -10,6 +12,7 @@ using namespace kkk;
 //};
 
 namespace kkk {
+
 	void friend_PrintInfo(const myfriend& obj) {
 		std::cout << "here friend function:" << obj.x << std::endl;
 	}
@@ -33,16 +36,20 @@ int main(void) {
 	//	std::cout << "Area = " << myRect.Area() << std::endl;
 
 	std::cout << "======================" << std::endl;
-	
+
 	//2- friend function
 	myfriend obj(3);
 	friend_PrintInfo(obj);
 
 	std::cout << "======================" << std::endl;
-	
+
 	//3- friend class
 	//myfriend obj(3);
 	classB b(obj);
 	b.test();
+
+	std::cout << "======================" << std::endl;
+	//4- define
+	std::cout << "FUNC(x,y)" << FUNC(1 + 9, 5 - 3) << std::endl;
 	return 0;
 }
