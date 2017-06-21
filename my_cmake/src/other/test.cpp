@@ -1,5 +1,6 @@
 #include "Rectange.h"
 #include "myfriend.h"
+#include <memory>
 #include <iostream>
 
 using namespace kkk;
@@ -35,21 +36,31 @@ int main(void) {
 	//	temp.PrintInfo();
 	//	std::cout << "Area = " << myRect.Area() << std::endl;
 
-	std::cout << "======================" << std::endl;
+	std::cout << "=========friend function=============" << std::endl;
 
 	//2- friend function
 	myfriend obj(3);
 	friend_PrintInfo(obj);
 
-	std::cout << "======================" << std::endl;
+	std::cout << "==========friend class============" << std::endl;
 
 	//3- friend class
 	//myfriend obj(3);
 	classB b(obj);
 	b.test();
 
-	std::cout << "======================" << std::endl;
+	std::cout << "===========define===========" << std::endl;
 	//4- define
 	std::cout << "FUNC(x,y)" << FUNC(1 + 9, 5 - 3) << std::endl;
+
+	std::cout << "==========auto_ptr()============" << std::endl;
+	//5- auto_ptr
+	std::auto_ptr<myfriend> x = std::auto_ptr<myfriend>(new myfriend(300));
+	//std::auto_ptr<myfriend> x(new myfriend(300));
+	myfriend *y = x.release();//x.get();
+	if (!y) {
+		std::cout<<"not null\n;";
+	}//useless
+	y->test();
 	return 0;
 }

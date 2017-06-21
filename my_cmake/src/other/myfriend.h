@@ -19,6 +19,7 @@ namespace kkk {
         friend void friend_PrintInfo(const myfriend& obj);
         friend class classB;
         virtual ~myfriend();
+        void test();
     private:
         int x;
     };

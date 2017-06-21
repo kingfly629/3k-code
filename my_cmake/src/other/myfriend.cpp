@@ -28,6 +28,10 @@ namespace kkk {
 	myfriend::~myfriend() {
 	}
 
+	void myfriend::test() {
+		std::cout << "here myfriend test()..." << std::endl;
+	}
+
 	classB::classB(myfriend &_a) : a(_a) {
 	}
 
