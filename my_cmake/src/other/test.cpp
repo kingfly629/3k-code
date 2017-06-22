@@ -57,10 +57,11 @@ int main(void) {
 	//5- auto_ptr
 	std::auto_ptr<myfriend> x = std::auto_ptr<myfriend>(new myfriend(300));
 	//std::auto_ptr<myfriend> x(new myfriend(300));
-	myfriend *y = x.release();//x.get();
-	if (!y) {
-		std::cout<<"not null\n;";
-	}//useless
+	myfriend *y = x.get();//x.release();//x.get();
+	std::cout<<x.get()<<std::endl;
+	std::cout<<y<<std::endl;
 	y->test();
+	myfriend *z = new myfriend;
+	//delete y;
 	return 0;
 }
