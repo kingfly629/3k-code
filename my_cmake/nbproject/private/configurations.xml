@@ -7,6 +7,9 @@
       <df name="obj">
       </df>
       <df name="src">
+        <df name="boost">
+          <in>boost_main.cpp</in>
+        </df>
         <df name="cpp_20170602">
           <in>client.cpp</in>
           <in>client_socket.cpp</in>
