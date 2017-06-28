@@ -2,6 +2,9 @@
 #include "myfriend.h"
 #include <memory>
 #include <iostream>
+#include <assert.h>
+#include <string.h>
+#include <stdlib.h>
 
 using namespace kkk;
 
@@ -17,6 +20,34 @@ namespace kkk {
 	void friend_PrintInfo(const myfriend& obj) {
 		std::cout << "here friend function:" << obj.x << std::endl;
 	}
+}
+
+char* my_strcpy(char *dest, const char *src) {
+	assert(sizeof (dest)>=sizeof (src));
+	while (*src != '\0') {
+		*dest++ = *src++;
+	}
+	return dest;
+}
+
+char* my_str_replace(const char *src, const char *sub, const char* replace) {
+	char *result = (char *) malloc(sizeof (char) * (sizeof (src) - sizeof (sub) + sizeof (replace)));
+	char *temp = strstr(src, sub);
+	if (!temp) {
+		return NULL;
+	}
+	std::cout << "temp:" << temp << std::endl;
+	//strncpy(result, src, temp - src);
+	//result[temp-src] = '\0';
+	strncat(result, src, temp - src);
+	std::cout << "cur 1:" << strlen(result) << std::endl;
+	char *q = strcat(result, replace);
+	std::cout << "cur 2:" << strlen(result) << std::endl;
+	char *p = strcat(result, temp + strlen(sub));
+	std::cout << "cur 3:" << strlen(result) << std::endl;
+	result[strlen(result)] = '\0';
+
+	return p;
 }
 
 int main(void) {
@@ -57,11 +88,27 @@ int main(void) {
 	//5- auto_ptr
 	std::auto_ptr<myfriend> x = std::auto_ptr<myfriend>(new myfriend(300));
 	//std::auto_ptr<myfriend> x(new myfriend(300));
-	myfriend *y = x.get();//x.release();//x.get();
-	std::cout<<x.get()<<std::endl;
-	std::cout<<y<<std::endl;
+	myfriend *y = x.get(); //x.release();//x.get();
+	std::cout << x.get() << std::endl;
+	std::cout << y << std::endl;
 	y->test();
-	myfriend *z = new myfriend;
-	//delete y;
+	//myfriend *z = new myfriend;
+	//delete z;
+
+	std::cout << "==========str_replace============" << std::endl;
+	const char *src = "wangjing jiang";
+	const char *sub = "jing";
+	const char *replace = "jin";
+	std::cout << "before replace:" << src << std::endl;
+	char *p = my_str_replace(src, sub, replace);
+	std::cout << "after replace:" << my_str_replace(src, sub, replace) << std::endl;
+	free(p);
+
+	std::cout << "==========strcpy============" << std::endl;
+	char *dest = new char [sizeof (src)];
+	std::cout << "src:" << src << std::endl;
+	my_strcpy(dest, src);
+	std::cout << "dest:" << dest << std::endl;
+	delete [] dest;
 	return 0;
 }
