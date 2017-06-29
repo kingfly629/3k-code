@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 using namespace kkk;
 
@@ -22,7 +23,7 @@ int division(int a, int b) {
 	std::cout << "(int)a/b=" << c1 << std::endl;
 	std::cout << "(int)a/b=" << (int) a / b << std::endl;
 	std::cout << "(float)a/b=" << c2 << std::endl;
-	std::cout << "(float)a/b=" << (float) a / b << std::endl;
+	std::cout << "(float)(a/b)=" << (float) (a / b) << std::endl;
 	std::cout << "(double)a/b=" << c3 << std::endl;
 	std::cout << "(double)a/b=" << (double) a / b << std::endl;
 }
@@ -61,7 +62,7 @@ char* my_str_replace(const char *src, const char *sub, const char* replace) {
 	std::cout << "cur 2:" << strlen(result) << std::endl;
 	char *p = strcat(result, temp + strlen(sub));
 	std::cout << "cur 3:" << strlen(result) << std::endl;
-	//result[strlen(result)] = '\0';
+	result[strlen(result)] = '\0';
 
 	return p;
 }
@@ -132,6 +133,15 @@ int main(void) {
 	//CallBack func = division;
 	//pq(1,'c');
 	test(3, 2, division);
+
+	std::cout << "==========force type transfer============" << std::endl;
+	int i = 17;
+	//char c = 'c'; /* ascii 值是 99 */
+	int j = 1;
+	float sum;
+	sum = (float )i + j;
+	std::cout << "Value of sum " << sum << std::endl;
+	//printf("Value of sum : %f,%d\n", sum, sum);
 
 	return 0;
 }
