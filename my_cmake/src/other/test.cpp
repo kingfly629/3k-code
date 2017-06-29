@@ -9,11 +9,27 @@
 using namespace kkk;
 
 #define FUNC(X,Y) X*Y-Y
-//class b {
-//	char i;
-//	char k;
-//	int d;
-//};
+
+typedef unsigned int uint8;
+typedef unsigned long uint64;
+typedef int (*CallBack)(int, int);
+
+int division(int a, int b) {
+	std::cout << "a=" << a << "; b=" << b << std::endl;
+	int c1 = a / b;
+	float c2 = a / b;
+	double c3 = a / b;
+	std::cout << "(int)a/b=" << c1 << std::endl;
+	std::cout << "(int)a/b=" << (int) a / b << std::endl;
+	std::cout << "(float)a/b=" << c2 << std::endl;
+	std::cout << "(float)a/b=" << (float) a / b << std::endl;
+	std::cout << "(double)a/b=" << c3 << std::endl;
+	std::cout << "(double)a/b=" << (double) a / b << std::endl;
+}
+
+void test(int a, int b, CallBack _callback) {
+	_callback(a, b);
+}
 
 namespace kkk {
 
@@ -23,7 +39,7 @@ namespace kkk {
 }
 
 char* my_strcpy(char *dest, const char *src) {
-	assert(sizeof (dest)>=sizeof (src));
+	assert(sizeof (dest) >= sizeof (src));
 	while (*src != '\0') {
 		*dest++ = *src++;
 	}
@@ -32,7 +48,7 @@ char* my_strcpy(char *dest, const char *src) {
 
 char* my_str_replace(const char *src, const char *sub, const char* replace) {
 	char *result = (char *) malloc(sizeof (char) * (sizeof (src) - sizeof (sub) + sizeof (replace)));
-	char *temp = strstr(src, sub);
+	const char *temp = strstr(src, sub);
 	if (!temp) {
 		return NULL;
 	}
@@ -45,7 +61,7 @@ char* my_str_replace(const char *src, const char *sub, const char* replace) {
 	std::cout << "cur 2:" << strlen(result) << std::endl;
 	char *p = strcat(result, temp + strlen(sub));
 	std::cout << "cur 3:" << strlen(result) << std::endl;
-	result[strlen(result)] = '\0';
+	//result[strlen(result)] = '\0';
 
 	return p;
 }
@@ -101,7 +117,7 @@ int main(void) {
 	const char *replace = "jin";
 	std::cout << "before replace:" << src << std::endl;
 	char *p = my_str_replace(src, sub, replace);
-	std::cout << "after replace:" << my_str_replace(src, sub, replace) << std::endl;
+	std::cout << "after replace:" << p << std::endl;
 	free(p);
 
 	std::cout << "==========strcpy============" << std::endl;
@@ -110,5 +126,12 @@ int main(void) {
 	my_strcpy(dest, src);
 	std::cout << "dest:" << dest << std::endl;
 	delete [] dest;
+
+	std::cout << "==========typedef function & callback============" << std::endl;
+	//int (*p)(int,char) = &ttt;
+	//CallBack func = division;
+	//pq(1,'c');
+	test(3, 2, division);
+
 	return 0;
 }

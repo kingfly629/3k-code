@@ -1,11 +1,13 @@
 #include <iostream>
 #include <string.h>
-//#include <ext.cpp>
 using namespace std;
-extern int ijk;
 
-int main(void)
-{
-	cout<<"ijk="<<ijk<<endl;
+int abc = 10;
+int ijk = 20;
+extern void print();
+
+int main(void) {
+	cout << "abc=" << abc << "; ijk=" << ijk << endl;
+	print();
 	return 0;
 }

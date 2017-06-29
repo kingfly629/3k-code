@@ -1,9 +1,9 @@
-#include <stdio.h>
+#include <iostream>
 
-int ijk=10;
+extern int abc;
+int ijk = 22;
 
-/*int main(void) {
-printf("xyz=%d\n",ijk);
-return 0;
-}*/
+void print() {
+	std::cout << "[extern]abc=" << abc << "; ijk=" << ijk << std::endl;
+}
 
