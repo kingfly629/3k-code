@@ -126,7 +126,7 @@ int main(void) {
 
 		std::cout << "==========strcpy============" << std::endl;
 		char *dest = new char [strlen(src) + 1];
-		memset(dest, 0x0, sizeof (src));
+		memset(dest, 0x0, strlen(src) + 1);
 		std::cout << "src:" << src << "; strlen(src)" << strlen(src) << std::endl;
 		my_strcpy(dest, src);
 		std::cout << "dest:" << dest << std::endl;
