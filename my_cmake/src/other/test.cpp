@@ -114,8 +114,6 @@ int main(void) {
 		std::cout << x.get() << std::endl;
 		std::cout << y << std::endl;
 		y->test();
-		//myfriend *z = new myfriend;
-		//delete z;
 
 		std::cout << "==========str_replace============" << std::endl;
 		const char *src = "wangjing jiang";
@@ -132,7 +130,7 @@ int main(void) {
 		std::cout << "src:" << src << "; strlen(src)" << strlen(src) << std::endl;
 		my_strcpy(dest, src);
 		std::cout << "dest:" << dest << std::endl;
-		//delete [] dest;
+		delete [] dest;
 
 		std::cout << "==========typedef function & callback============" << std::endl;
 		//CallBack func = division;
@@ -148,8 +146,8 @@ int main(void) {
 		std::cout << "Value of sum1 :" << sum1 << "; Value of sum2 :" << sum2 << std::endl;
 
 		std::cout << "==========derived class============" << std::endl;
-		CDerived child;
-		child.test();
+		//CDerived child;
+		//child.test();
 		CFather *father = new CDerived(100);
 		father->test();
 		delete father;
