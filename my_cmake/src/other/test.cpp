@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-
+#include <exception>
 using namespace kkk;
 
 #define FUNC(X,Y) X*Y-Y
@@ -20,11 +20,11 @@ int division(int a, int b) {
 	int c1 = a / b;
 	float c2 = a / b;
 	double c3 = a / b;
-	std::cout << "(int)a/b=" << c1 << std::endl;
+	std::cout << "int =" << c1 << std::endl;
 	std::cout << "(int)a/b=" << (int) a / b << std::endl;
-	std::cout << "(float)a/b=" << c2 << std::endl;
-	std::cout << "(float)(a/b)=" << (float) a / b << std::endl;
-	std::cout << "(double)a/b=" << c3 << std::endl;
+	std::cout << "float =" << c2 << std::endl;
+	std::cout << "(float)a/b=" << (float) a / b << std::endl;
+	std::cout << "double" << c3 << std::endl;
 	std::cout << "(double)a/b=" << (double) a / b << std::endl;
 }
 
@@ -51,7 +51,7 @@ char* str_replace(const char *src, const char *sub, const char* replace) {
 	char *result = (char *) malloc(sizeof (char) * (sizeof (src) - sizeof (sub) + sizeof (replace)));
 	memset(result, 0x0, sizeof (result));
 	std::cout << "sizeof(result)" << sizeof (result) << std::endl;
-	char *temp = strstr(src, sub);
+	char *temp = const_cast<char *> (strstr(src, sub));
 	if (!temp) {
 		return NULL;
 	}
@@ -81,7 +81,7 @@ int main(void) {
 
 		Point temp = myRect.TopRightPoint();
 		temp.PrintInfo();
-		myRect.TopLeftPoint();
+		temp = myRect.TopLeftPoint();
 		temp.PrintInfo();
 		temp = myRect.BottomRightPoint();
 		temp.PrintInfo();
@@ -140,12 +140,10 @@ int main(void) {
 
 		std::cout << "==========force type transfer============" << std::endl;
 		int i = 17;
-		//char c = 'c'; /* ascii 值是 99 */
-		int j = 1;
-		float sum;
-		sum = (float) i + j;
-		std::cout << "Value of sum " << sum << std::endl;
-		//printf("Value of sum : %f,%d\n", sum, sum);
+		char j = 'c'; /* ascii 值是 99 */
+		float sum1 = (float) i + j;
+		float sum2 = i + j;
+		printf("Value of sum : %f,%f\n", sum1, sum2);
 	} catch (const std::exception &ex) {
 		std::cerr << "catch Exception: " << ex.what() << std::endl;
 		fprintf(stderr, "catch Exception : %s", ex.what());
