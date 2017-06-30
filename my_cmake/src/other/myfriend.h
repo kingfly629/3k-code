@@ -35,6 +35,26 @@ namespace kkk {
         int x;
     };
 
+    class CFather {
+    public:
+        CFather();
+        CFather(int _a);
+        virtual ~CFather();
+        virtual void test();
+    protected:
+        int a;
+    };
+
+    class CDerived : public CFather {
+    public:
+        CDerived();
+        CDerived(int _b);
+        ~CDerived();
+        void test();
+    private:
+        int b;
+    };
+
 }
 #endif	/* MYFRIEND_H */
 

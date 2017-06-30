@@ -20,11 +20,11 @@ int division(int a, int b) {
 	int c1 = a / b;
 	float c2 = a / b;
 	double c3 = a / b;
-	std::cout << "int =" << c1 << std::endl;
+	std::cout << "int=" << c1 << std::endl;
 	std::cout << "(int)a/b=" << (int) a / b << std::endl;
-	std::cout << "float =" << c2 << std::endl;
+	std::cout << "float=" << c2 << std::endl;
 	std::cout << "(float)a/b=" << (float) a / b << std::endl;
-	std::cout << "double" << c3 << std::endl;
+	std::cout << "double=" << c3 << std::endl;
 	std::cout << "(double)a/b=" << (double) a / b << std::endl;
 }
 
@@ -48,7 +48,7 @@ char* my_strcpy(char *dest, const char *src) {
 }
 
 char* str_replace(const char *src, const char *sub, const char* replace) {
-	char *result = (char *) malloc(sizeof (char) * (sizeof (src) - sizeof (sub) + sizeof (replace)));
+	char *result = (char *) malloc(sizeof (char) * (strlen(src) - strlen(sub) + strlen(replace) + 1));
 	memset(result, 0x0, sizeof (result));
 	std::cout << "sizeof(result)" << sizeof (result) << std::endl;
 	char *temp = const_cast<char *> (strstr(src, sub));
@@ -127,11 +127,12 @@ int main(void) {
 		free(p);
 
 		std::cout << "==========strcpy============" << std::endl;
-		char *dest = new char [sizeof (src)];
-		std::cout << "src:" << src << std::endl;
+		char *dest = new char [strlen(src) + 1];
+		memset(dest, 0x0, sizeof (src));
+		std::cout << "src:" << src << "; strlen(src)" << strlen(src) << std::endl;
 		my_strcpy(dest, src);
 		std::cout << "dest:" << dest << std::endl;
-		delete [] dest;
+		//delete [] dest;
 
 		std::cout << "==========typedef function & callback============" << std::endl;
 		//CallBack func = division;
@@ -143,7 +144,15 @@ int main(void) {
 		char j = 'c'; /* ascii 值是 99 */
 		float sum1 = (float) i + j;
 		float sum2 = i + j;
-		printf("Value of sum : %f,%f\n", sum1, sum2);
+		//printf("Value of sum : %f,%f\n", sum1, sum2);
+		std::cout << "Value of sum1 :" << sum1 << "; Value of sum2 :" << sum2 << std::endl;
+
+		std::cout << "==========derived class============" << std::endl;
+		CDerived child;
+		child.test();
+		CFather *father = new CDerived(100);
+		father->test();
+		delete father;
 	} catch (const std::exception &ex) {
 		std::cerr << "catch Exception: " << ex.what() << std::endl;
 		fprintf(stderr, "catch Exception : %s", ex.what());

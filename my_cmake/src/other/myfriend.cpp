@@ -44,4 +44,40 @@ namespace kkk {
 	void classB::test() {
 		std::cout << "here friend class:" << a.x << std::endl;
 	}
+
+	CFather::CFather() {
+		a = 1;
+		std::cout << "here Father Default Constrution:" << a << std::endl;
+	}
+
+	CFather::CFather(int _a) : a(_a) {
+		std::cout << "here Father Constrution:" << a << std::endl;
+	}
+
+	CFather::~CFather() {
+		std::cout << "here Father Destrution:" << std::endl;
+	}
+
+	void CFather::test() {
+		std::cout << "Father a:" << a << std::endl;
+	}
+
+	CDerived::CDerived() {
+		//a = 1;
+		b = 2;
+		std::cout << "here Child Default Constrution:" << a << "," << b << std::endl;
+	}
+
+	CDerived::CDerived(int _a) : CFather(_a) {
+		b = 200;
+		std::cout << "here Child Parameter Constrution:" << a << "," << b << std::endl;
+	}
+
+	CDerived::~CDerived() {
+		std::cout << "here Child Destrution:" << std::endl;
+	}
+
+	void CDerived::test() {
+		std::cout << "Derived a:" << a << std::endl;
+	}
 }
