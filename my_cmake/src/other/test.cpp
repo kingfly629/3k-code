@@ -23,7 +23,7 @@ int division(int a, int b) {
 	std::cout << "(int)a/b=" << c1 << std::endl;
 	std::cout << "(int)a/b=" << (int) a / b << std::endl;
 	std::cout << "(float)a/b=" << c2 << std::endl;
-	std::cout << "(float)(a/b)=" << (float) (a / b) << std::endl;
+	std::cout << "(float)(a/b)=" << (float) a / b << std::endl;
 	std::cout << "(double)a/b=" << c3 << std::endl;
 	std::cout << "(double)a/b=" << (double) a / b << std::endl;
 }
@@ -47,13 +47,15 @@ char* my_strcpy(char *dest, const char *src) {
 	return dest;
 }
 
-char* my_str_replace(const char *src, const char *sub, const char* replace) {
+char* str_replace(const char *src, const char *sub, const char* replace) {
 	char *result = (char *) malloc(sizeof (char) * (sizeof (src) - sizeof (sub) + sizeof (replace)));
-	const char *temp = strstr(src, sub);
+	memset(result, 0x0, sizeof (result));
+	std::cout << "sizeof(result)" << sizeof (result) << std::endl;
+	char *temp = strstr(src, sub);
 	if (!temp) {
 		return NULL;
 	}
-	std::cout << "temp:" << temp << std::endl;
+	std::cout << "sizeof(temp)" << temp - src << std::endl;
 	//strncpy(result, src, temp - src);
 	//result[temp-src] = '\0';
 	strncat(result, src, temp - src);
@@ -62,86 +64,91 @@ char* my_str_replace(const char *src, const char *sub, const char* replace) {
 	std::cout << "cur 2:" << strlen(result) << std::endl;
 	char *p = strcat(result, temp + strlen(sub));
 	std::cout << "cur 3:" << strlen(result) << std::endl;
-	result[strlen(result)] = '\0';
+	//result[strlen(result)] = '\0';(可以不需要，因为strncat会在尾部追加了)
 
 	return p;
 }
 
 int main(void) {
-	//1- construction
-	//	Point a(1.0, 2.0);
-	//	Point b(3.0, 4.1);
-	//	Rectange myRect_tmp(a, b);
-	//	Rectange myRect(myRect_tmp);
-	//	//myRect = myRect_tmp;
-	//	Point temp = myRect.TopRightPoint();
-	//	temp.PrintInfo();
-	//	myRect.TopLeftPoint();
-	//	temp.PrintInfo();
-	//	temp = myRect.BottomRightPoint();
-	//	temp.PrintInfo();
-	//	temp = myRect.BottomLeftPoint();
-	//	temp.PrintInfo();
-	//	std::cout << "Area = " << myRect.Area() << std::endl;
+	try {
+		std::cout << "=========construction=============" << std::endl;
+		//1- construction
+		Point a(1.0, 2.0);
+		Point b(3.0, 4.1);
+		Rectange myRect_tmp(a, b);
+		Rectange myRect(myRect_tmp);
+		myRect = myRect_tmp;
 
-	std::cout << "=========friend function=============" << std::endl;
+		Point temp = myRect.TopRightPoint();
+		temp.PrintInfo();
+		myRect.TopLeftPoint();
+		temp.PrintInfo();
+		temp = myRect.BottomRightPoint();
+		temp.PrintInfo();
+		temp = myRect.BottomLeftPoint();
+		temp.PrintInfo();
+		std::cout << "Area = " << myRect.Area() << std::endl;
 
-	//2- friend function
-	myfriend obj(3);
-	friend_PrintInfo(obj);
+		std::cout << "=========friend function=============" << std::endl;
 
-	std::cout << "==========friend class============" << std::endl;
+		//2- friend function
+		myfriend obj(3);
+		friend_PrintInfo(obj);
 
-	//3- friend class
-	//myfriend obj(3);
-	classB b(obj);
-	b.test();
+		std::cout << "==========friend class============" << std::endl;
 
-	std::cout << "===========define===========" << std::endl;
-	//4- define
-	std::cout << "FUNC(x,y)" << FUNC(1 + 9, 5 - 3) << std::endl;
+		//3- friend class
+		//myfriend obj(3);
+		classB bb(obj);
+		bb.test();
 
-	std::cout << "==========auto_ptr()============" << std::endl;
-	//5- auto_ptr
-	std::auto_ptr<myfriend> x = std::auto_ptr<myfriend>(new myfriend(300));
-	//std::auto_ptr<myfriend> x(new myfriend(300));
-	myfriend *y = x.get(); //x.release();//x.get();
-	std::cout << x.get() << std::endl;
-	std::cout << y << std::endl;
-	y->test();
-	//myfriend *z = new myfriend;
-	//delete z;
+		std::cout << "===========define===========" << std::endl;
+		//4- define
+		std::cout << "FUNC(x,y)" << FUNC(1 + 9, 5 - 3) << std::endl;
 
-	std::cout << "==========str_replace============" << std::endl;
-	const char *src = "wangjing jiang";
-	const char *sub = "jing";
-	const char *replace = "jin";
-	std::cout << "before replace:" << src << std::endl;
-	char *p = my_str_replace(src, sub, replace);
-	std::cout << "after replace:" << p << std::endl;
-	free(p);
+		std::cout << "==========auto_ptr()============" << std::endl;
+		//5- auto_ptr
+		std::auto_ptr<myfriend> x = std::auto_ptr<myfriend>(new myfriend(300));
+		//std::auto_ptr<myfriend> x(new myfriend(300));
+		myfriend *y = x.get(); //x.release();//x.get();
+		std::cout << x.get() << std::endl;
+		std::cout << y << std::endl;
+		y->test();
+		//myfriend *z = new myfriend;
+		//delete z;
 
-	std::cout << "==========strcpy============" << std::endl;
-	char *dest = new char [sizeof (src)];
-	std::cout << "src:" << src << std::endl;
-	my_strcpy(dest, src);
-	std::cout << "dest:" << dest << std::endl;
-	delete [] dest;
+		std::cout << "==========str_replace============" << std::endl;
+		const char *src = "wangjing jiang";
+		const char *sub = "jing";
+		const char *replace = "jin";
+		std::cout << "before replace:" << src << std::endl;
+		char *p = str_replace(src, sub, replace);
+		std::cout << "after replace:" << p << std::endl;
+		free(p);
 
-	std::cout << "==========typedef function & callback============" << std::endl;
-	//int (*p)(int,char) = &ttt;
-	//CallBack func = division;
-	//pq(1,'c');
-	test(3, 2, division);
+		std::cout << "==========strcpy============" << std::endl;
+		char *dest = new char [sizeof (src)];
+		std::cout << "src:" << src << std::endl;
+		my_strcpy(dest, src);
+		std::cout << "dest:" << dest << std::endl;
+		delete [] dest;
 
-	std::cout << "==========force type transfer============" << std::endl;
-	int i = 17;
-	//char c = 'c'; /* ascii 值是 99 */
-	int j = 1;
-	float sum;
-	sum = (float )i + j;
-	std::cout << "Value of sum " << sum << std::endl;
-	//printf("Value of sum : %f,%d\n", sum, sum);
+		std::cout << "==========typedef function & callback============" << std::endl;
+		//CallBack func = division;
+		//func(1,3);
+		test(3, 2, division);
 
+		std::cout << "==========force type transfer============" << std::endl;
+		int i = 17;
+		//char c = 'c'; /* ascii 值是 99 */
+		int j = 1;
+		float sum;
+		sum = (float) i + j;
+		std::cout << "Value of sum " << sum << std::endl;
+		//printf("Value of sum : %f,%d\n", sum, sum);
+	} catch (const std::exception &ex) {
+		std::cerr << "catch Exception: " << ex.what() << std::endl;
+		fprintf(stderr, "catch Exception : %s", ex.what());
+	}
 	return 0;
 }

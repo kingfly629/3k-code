@@ -11,7 +11,7 @@ Rectange::Rectange() {
 	std::cout << "here self-define default construct..." << std::endl;
 }
 
-Rectange::Rectange(const Point &bottomLeftPoint,const Point &topRightPoint) {
+Rectange::Rectange(const Point &bottomLeftPoint,const Point topRightPoint) {
 	std::cout << "here parameter construct..." << std::endl;
 	m_TopRightX = topRightPoint.getX();
 	m_TopRightY = topRightPoint.getY();
@@ -43,8 +43,8 @@ Point Rectange::TopRightPoint() const {
 	return Point(m_TopRightX, m_TopRightY);
 }
 
-void Rectange::TopLeftPoint() const {
-	Point Point2(m_BottomLeftX, m_TopRightY);
+Point Rectange::TopLeftPoint() const {
+	return Point(m_BottomLeftX, m_TopRightY);
 }
 
 Point Rectange::BottomRightPoint() const {

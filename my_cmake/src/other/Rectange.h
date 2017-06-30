@@ -47,12 +47,12 @@ private:
 class Rectange {
 public:
     Rectange();
-    Rectange(const Point &bottomLeftPoint, const Point &topRightPoint);
+    Rectange(const Point &bottomLeftPoint, const Point topRightPoint);
     //Rectange(const Rectange& orig);
     //const Rectange& operator =(const Rectange& orig);
     virtual ~Rectange();
     Point TopRightPoint() const;
-    void TopLeftPoint() const;
+    Point TopLeftPoint() const;
     Point BottomRightPoint() const;
     Point BottomLeftPoint() const;
     float Area() const;
