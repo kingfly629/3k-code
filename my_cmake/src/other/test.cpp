@@ -85,6 +85,9 @@ static int qsort_cmp_func_desc(const void* p, const void* q) {
 	return *((int *) p) < *((int *) q);
 }
 
+static bool sort_cmp_func_desc(const void* p, const void* q) {
+	return *((int *) p) < *((int *) q);
+}
 //quick sort
 static int quick_sort(const void* p, const void* q) {
 	return *((int *) p) > *((int *) q);
@@ -197,7 +200,7 @@ int main(void) {
 
 		//sort c++ desc
 		int test3[] = {3, 2, 6, 2, 7, 9, 0, 8};
-		sort(test3, test3 + 8, qsort_cmp_func_desc);
+		sort(test3, test3 + 8, sort_cmp_func_desc);
 		printf("after sort with cmp_func:\n");
 		for (int k = 0; k < 8; ++k) {
 			printf("test3[%d] = %d\n", k, test3[k]);
