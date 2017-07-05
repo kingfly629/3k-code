@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <exception>
+#include <algorithm>
 using namespace kkk;
 
 #define FUNC(X,Y) X*Y-Y
@@ -67,6 +68,26 @@ char* str_replace(const char *src, const char *sub, const char* replace) {
 	//result[strlen(result)] = '\0';(可以不需要，因为strncat会在尾部追加了)
 
 	return p;
+}
+
+//bubble sort
+
+void bubble_sort(int []) {
+
+}
+
+//qsort
+static int qsort_cmp_func_asc(const void* p, const void* q) {
+	return *((int *) p) > *((int *) q);
+}
+
+static int qsort_cmp_func_desc(const void* p, const void* q) {
+	return *((int *) p) < *((int *) q);
+}
+
+//quick sort
+static int quick_sort(const void* p, const void* q) {
+	return *((int *) p) > *((int *) q);
 }
 
 int main(void) {
@@ -151,6 +172,36 @@ int main(void) {
 		CFather *father = new CDerived(100);
 		father->test();
 		delete father;
+
+		std::cout << "========== sort ============" << std::endl;
+		int test[] = {3, 2, 6, 2, 7, 9, 0, 8};
+		printf("before :\n");
+		for (int k = 0; k < 8; ++k) {
+			printf("test[%d] = %d\n", k, test[k]);
+		}
+
+		//qsort cmp_func asc
+		qsort(test, 8, sizeof (int), qsort_cmp_func_asc);
+		printf("after qsort :\n");
+		for (int k = 0; k < 8; ++k) {
+			printf("test[%d] = %d\n", k, test[k]);
+		}
+
+		//qsort cmp_func desc
+		int test2[] = {3, 2, 6, 2, 7, 9, 0, 8};
+		qsort(test2, 8, sizeof (int), qsort_cmp_func_desc);
+		printf("after qsort with cmp_func:\n");
+		for (int k = 0; k < 8; ++k) {
+			printf("test2[%d] = %d\n", k, test2[k]);
+		}
+
+		//sort c++ desc
+		int test3[] = {3, 2, 6, 2, 7, 9, 0, 8};
+		sort(test3, test3 + 8, qsort_cmp_func_desc);
+		printf("after sort with cmp_func:\n");
+		for (int k = 0; k < 8; ++k) {
+			printf("test3[%d] = %d\n", k, test3[k]);
+		}
 	} catch (const std::exception &ex) {
 		std::cerr << "catch Exception: " << ex.what() << std::endl;
 		fprintf(stderr, "catch Exception : %s", ex.what());
