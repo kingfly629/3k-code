@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <exception>
 #include <algorithm>
+#include <vector>
 using namespace kkk;
 
 #define FUNC(X,Y) X*Y-Y
@@ -77,6 +78,7 @@ void bubble_sort(int []) {
 }
 
 //qsort
+
 static int qsort_cmp_func_asc(const void* p, const void* q) {
 	return *((int *) p) > *((int *) q);
 }
@@ -89,6 +91,7 @@ static bool sort_cmp_func_desc(const void* p, const void* q) {
 	return *((int *) p) < *((int *) q);
 }
 //quick sort
+
 static int quick_sort(const void* p, const void* q) {
 	return *((int *) p) > *((int *) q);
 }
@@ -185,7 +188,7 @@ int main(void) {
 
 		//qsort cmp_func asc
 		qsort(test, 8, sizeof (int), qsort_cmp_func_asc);
-		printf("after qsort :\n");
+		printf("after qsort asc:\n");
 		for (int k = 0; k < 8; ++k) {
 			printf("test[%d] = %d\n", k, test[k]);
 		}
@@ -193,17 +196,30 @@ int main(void) {
 		//qsort cmp_func desc
 		int test2[] = {3, 2, 6, 2, 7, 9, 0, 8};
 		qsort(test2, 8, sizeof (int), qsort_cmp_func_desc);
-		printf("after qsort with cmp_func:\n");
+		printf("after qsort desc:\n");
 		for (int k = 0; k < 8; ++k) {
 			printf("test2[%d] = %d\n", k, test2[k]);
 		}
 
 		//sort c++ desc
-		int test3[] = {3, 2, 6, 2, 7, 9, 0, 8};
-		sort(test3, test3 + 8, sort_cmp_func_desc);
-		printf("after sort with cmp_func:\n");
-		for (int k = 0; k < 8; ++k) {
-			printf("test3[%d] = %d\n", k, test3[k]);
+		//		int test3[] = {3, 2, 6, 2, 7, 9, 0, 8};
+		//		sort(test3, test3 + 8, sort_cmp_func_desc);
+		//		printf("after sort desc:\n");
+		//		for (int k = 0; k < 8; ++k) {
+		//			printf("test3[%d] = %d\n", k, test3[k]);
+		//		}
+		std::vector<int> v;
+		v.push_back(3);
+		v.push_back(2);
+		v.push_back(6);
+		v.push_back(2);
+		v.push_back(7);
+		v.push_back(9);
+		v.push_back(0);
+		v.push_back(8);
+		sort(v.begin(), v.end(), sort_cmp_func_desc);
+		for (int k = 0; k < v.size(); ++k) {
+			printf("v[%d] = %d\n", k, v.[k]);
 		}
 	} catch (const std::exception &ex) {
 		std::cerr << "catch Exception: " << ex.what() << std::endl;
