@@ -16,6 +16,7 @@ using namespace kkk;
 typedef unsigned int uint8;
 typedef unsigned long uint64;
 typedef int (*CallBack)(int, int);
+//template <*int,bool> void sort();
 
 int division(int a, int b) {
 	std::cout << "a=" << a << "; b=" << b << std::endl;
@@ -78,7 +79,6 @@ void bubble_sort(int []) {
 }
 
 //qsort
-
 static int qsort_cmp_func_asc(const void* p, const void* q) {
 	return *((int *) p) > *((int *) q);
 }
@@ -87,13 +87,20 @@ static int qsort_cmp_func_desc(const void* p, const void* q) {
 	return *((int *) p) < *((int *) q);
 }
 
-static bool sort_cmp_func_desc(const void* p, const void* q) {
-	return *((int *) p) < *((int *) q);
+//static bool sort_cmp_func_desc(const void* p, const void* q) {
+static bool sort_cmp_func_desc(int p, int q) {
+	return p<q;
 }
 //quick sort
-
 static int quick_sort(const void* p, const void* q) {
 	return *((int *) p) > *((int *) q);
+}
+
+//quick sort implement
+static int self_def_quick_sort(const void* p, const void* q) {
+	for () {
+		
+	}
 }
 
 int main(void) {
@@ -202,25 +209,16 @@ int main(void) {
 		}
 
 		//sort c++ desc
-		//		int test3[] = {3, 2, 6, 2, 7, 9, 0, 8};
-		//		sort(test3, test3 + 8, sort_cmp_func_desc);
-		//		printf("after sort desc:\n");
-		//		for (int k = 0; k < 8; ++k) {
-		//			printf("test3[%d] = %d\n", k, test3[k]);
-		//		}
 		std::vector<int> v;
 		v.push_back(3);
 		v.push_back(2);
-		v.push_back(6);
-		v.push_back(2);
-		v.push_back(7);
-		v.push_back(9);
-		v.push_back(0);
-		v.push_back(8);
+		v.push_back(6);;
 		sort(v.begin(), v.end(), sort_cmp_func_desc);
 		for (int k = 0; k < v.size(); ++k) {
-			printf("v[%d] = %d\n", k, v.[k]);
+			printf("v[%d] = %d\n", k, v.at(k));
 		}
+		
+		std::cout << "========== quick sort implement============" << std::endl;
 	} catch (const std::exception &ex) {
 		std::cerr << "catch Exception: " << ex.what() << std::endl;
 		fprintf(stderr, "catch Exception : %s", ex.what());

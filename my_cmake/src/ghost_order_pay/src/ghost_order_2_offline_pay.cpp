@@ -108,17 +108,22 @@ int main(int argc, char** argv) {
 
 		//业务逻辑处理 todo here
 		//1-查询指定月份的ghost订单
-		CMysqlWrapper mysql = new mysql;
+		CMysqlWrapper mysql = new CMysqlWrapper();
+		std::auto_ptr<CMysqlWrapper> mysql = std::auto_ptr<CMysqlWrapper>(new CMysqlWrapper("","","",""));
 		std::string sTable = "orders";
-		std::string sCondition = "channel_id = 'ghost' and substring(order_time,1,10) = ";
+		std::string sSelects = "order_id,order_status";
+		std::string sCondition = "channel_id = 'ghost' and order_status = 100 and substring(order_time,1,10) = ";
+		std::string order_by = "appoint_time";
+		//const char * sql = "select * from orders where channel_id = 'ghost' and substring(order_time,1,10) = "
 		sCondition.append("'");
 		sCondition.append(time);
 		sCondition.append("'");
-		mysql->Query(sTable,sCondition);
+		mysql->Query(sTable,sCondition,sSelects,order_by,limit);
+		mysql->PrintInfo();
 		//2-循环每一笔订单，调用订单接口完成线下支付
-		while (g_run) {
-			
-		}
+//		while (g_run) {
+//			
+//		}
 
 	} catch (const std::exception &ex) {
 		std::cerr << "catch Exception: " << ex.what() << std::endl;
