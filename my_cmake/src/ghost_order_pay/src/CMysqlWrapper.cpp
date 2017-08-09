@@ -27,7 +27,7 @@ void CMysqlWrapper::Query(const std::string & sql) {
 }
 
 void CMysqlWrapper::Query(const std::string &sTable, const std::string &sCondition,
-		const std::string &sSelects, const std::string &order_by = "", int limit = 1) {
+		const std::string &sSelects, const std::string &order_by, int limit) {
 	select.swap(sSelects);
 	std::string sql = "select " + select + " from " + sTable + " where " + sCondition;
 	if (!order_by.length()) {

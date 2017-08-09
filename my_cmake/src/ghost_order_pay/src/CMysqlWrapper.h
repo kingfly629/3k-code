@@ -8,17 +8,20 @@
 #ifndef MYSQL_WRAPPER_H
 #define MYSQL_WRAPPER_H
 
+#include <mysql++.h>
+
 class CMysqlWrapper {
 public:
 	CMysqlWrapper();
 	//CMysqlWrapper(const CMysqlWrapper& orig);
 	virtual ~CMysqlWrapper();
 	void Query(const std::string &sql);
-	void Query(const std::string &sql);
+	void Query(const std::string &sTable, const std::string &sCondition,
+		const std::string &sSelects, const std::string &order_by = "", int limit = 1);
 	void PrintInfo() const;
-	void Update();
-	void Delete();
-	void Insert();
+	void Update(const std::string & sql);
+	void Delete(const std::string & sql);
+	void Insert(const std::string & sql);
 private:
 	/*std::string passwd;
 	std::string user;
