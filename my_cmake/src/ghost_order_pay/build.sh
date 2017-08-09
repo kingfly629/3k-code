@@ -10,5 +10,5 @@ rm -fr Makefile
 rm -fr cmake_install.cmake
 rm -fr CMakeFiles
 
-#cmake .
-#make clean;make
+cmake .
+make clean;make
