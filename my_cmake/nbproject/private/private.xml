@@ -7,4 +7,19 @@
         <activeConfTypeElem>0</activeConfTypeElem>
         <activeConfIndexElem>0</activeConfIndexElem>
     </data>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/E:/Joe/其它代码/git-svn/src/ghost_order_pay/CMakeLists.txt</file>
+            <file>file:/E:/Joe/其它代码/git-svn/src/ghost_order_pay/src/plconfig.h</file>
+            <file>file:/E:/Joe/其它代码/git-svn/src/ghost_order_pay/src/ghost_order_2_offline_pay.cpp</file>
+            <file>file:/E:/Joe/其它代码/git-svn/src/ghost_order_pay/src/CMysqlWrapper.cpp</file>
+            <file>file:/E:/Joe/其它代码/git-svn/src/ghost_order_pay/src/http_client_syn.cpp</file>
+            <file>file:/E:/Joe/其它代码/git-svn/src/ghost_order_pay/src/http_client_syn.h</file>
+            <file>file:/E:/Joe/其它代码/git-svn/src/other/test.cpp</file>
+            <file>file:/E:/Joe/其它代码/git-svn/src/ghost_order_pay/src/CMysqlWrapper.h</file>
+            <file>file:/E:/Joe/其它代码/git-svn/src/db/mysql_test.cpp</file>
+            <file>file:/E:/Joe/其它代码/git-svn/src/ghost_order_pay/build.sh</file>
+        </group>
+    </open-files>
 </project-private>

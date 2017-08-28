@@ -8,7 +8,9 @@
 #ifndef MYSQL_WRAPPER_H
 #define MYSQL_WRAPPER_H
 
-#include <mysql++.h>
+#include "mysql++.h"
+#include "mysql++/mysql++.h"
+#include <vector>
 
 class CMysqlWrapper {
 public:
@@ -31,7 +33,7 @@ private:
 	mysqlpp::Connection conn;
 	//mysqlpp::Query query;
 	mysqlpp::StoreQueryResult res;
-	vector<std::string> v_fields;
+	std::vector<std::string> v_fields;
 };
 
 #endif /* MYSQL_WRAPPER_H */

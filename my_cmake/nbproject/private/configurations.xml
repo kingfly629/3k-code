@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="94">
+<configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="." name="0">
       <df name="bin">
@@ -30,6 +30,17 @@
         <df name="epoll">
           <in>client.cpp</in>
           <in>epoll_socket.cpp</in>
+        </df>
+        <df name="ghost_order_pay">
+          <df name="src">
+            <in>CMysqlWrapper.cpp</in>
+            <in>CMysqlWrapper.h</in>
+            <in>ghost_order_2_offline_pay.cpp</in>
+            <in>http_client_syn.cpp</in>
+            <in>http_client_syn.h</in>
+            <in>plconfig.cpp</in>
+            <in>plconfig.h</in>
+          </df>
         </df>
         <df name="other">
           <in>Rectange.cpp</in>
