@@ -12,6 +12,7 @@
 #include "mysql++/mysql++.h"
 #include <vector>
 
+namespace kkk {
 class CMysqlWrapper {
 public:
 	CMysqlWrapper();
@@ -35,6 +36,7 @@ private:
 	mysqlpp::StoreQueryResult res;
 	std::vector<std::string> v_fields;
 };
+}
 
 #endif /* MYSQL_WRAPPER_H */
 
