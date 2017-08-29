@@ -102,8 +102,8 @@ int main(int argc, char** argv) {
 //		}
 
 		//加载配置文件：订单接口地址等
-		PLConfig &conf;
-		if ((int ret = loadCfgData(conf, config)) < 0) {
+		PLConfig conf;
+		if ((int ret = conf.init(config)) < 0) {
 			goto RET;
 		}
 
@@ -114,7 +114,7 @@ int main(int argc, char** argv) {
 		std::string sSelects = "order_id,order_status";
 		std::string sCondition = "channel_id = 'ghost' and order_status = 100 and substring(order_time,1,10) = ";
 		std::string order_by = "appoint_time";
-		//const char * sql = "select * from orders where channel_id = 'ghost' and substring(order_time,1,10) = "
+		std::string limit = "2";
 		sCondition.append("'");
 		sCondition.append(time);
 		sCondition.append("'");
