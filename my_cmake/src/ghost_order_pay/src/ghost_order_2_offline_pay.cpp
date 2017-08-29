@@ -97,19 +97,17 @@ int main(int argc, char** argv) {
 		signal(SIGURG, SIG_IGN);
 		signal(SIGTERM, signal_handler);
 
-		if (daemon) {
-			ef::daemonize();
-		}
+//		if (daemon) {
+//			ef::daemonize();
+//		}
 
 		//加载配置文件：订单接口地址等
-		PLConfig & conf
+		PLConfig &conf;
 		if ((int ret = loadCfgData(conf, config)) < 0) {
 			goto RET;
 		}
 
 		//业务逻辑处理 todo here
-		//1-查询指定月份的ghost订单
-		CMysqlWrapper mysql = new CMysqlWrapper();
 		std::auto_ptr<CMysqlWrapper> mysql = std::auto_ptr<CMysqlWrapper>
 				(new CMysqlWrapper(conf.server, conf.user, conf.passwd, conf.db, conf.charset));
 		std::string sTable = "orders";
