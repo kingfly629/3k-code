@@ -18,8 +18,7 @@ namespace kkk {
 	class CMysqlWrapper {
 	public:
 		CMysqlWrapper();
-		CMysqlWrapper(const std::string &server, const std::string &user,
-				const std::string &passwd, const std::string &db, const std::string charset);
+		CMysqlWrapper(const std::string &server, const std::string &user,const std::string &passwd, const std::string &db, const std::string charset);
 		//CMysqlWrapper(const CMysqlWrapper& orig);
 		virtual ~CMysqlWrapper();
 		void Query(const std::string &sql);
