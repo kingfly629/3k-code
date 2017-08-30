@@ -10,6 +10,7 @@
 
 #include "mysql++.h"
 #include "mysql++/mysql++.h"
+#include <string>
 #include <vector>
 
 namespace kkk {
