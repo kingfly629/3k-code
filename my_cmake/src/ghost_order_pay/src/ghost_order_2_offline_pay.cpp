@@ -104,12 +104,14 @@ int main(int argc, char** argv) {
 
 		//加载配置文件：订单接口地址等
 		PLConfig conf;
-		if ((int ret = conf.init(config)) < 0) {
-			goto RET;
+		int ret = 0;
+		if ((ret = conf.init(config)) < 0) {
+			//goto RET;
+			return -1;
 		}
 
 		//业务逻辑处理 todo here
-		std::auto_ptr<CMysqlWrapper> mysqll = std::auto_ptr<CMysqlWrapper>
+		auto_ptr<CMysqlWrapper> mysql = auto_ptr<CMysqlWrapper>
 				(new CMysqlWrapper(conf.server, conf.user, conf.passwd, conf.db, conf.charset));
 		std::string sTable = "orders";
 		std::string sSelects = "order_id,order_status";
@@ -119,8 +121,8 @@ int main(int argc, char** argv) {
 		sCondition.append("'");
 		sCondition.append(time);
 		sCondition.append("'");
-		mysqll->Query(sTable, sCondition, sSelects, order_by, limit);
-		mysqll->PrintInfo();
+		mysql->Query(sTable, sCondition, sSelects, order_by, limit);
+		mysql->PrintInfo();
 		//2-循环每一笔订单，调用订单接口完成线下支付
 		//		while (g_run) {
 		//			
@@ -132,7 +134,6 @@ int main(int argc, char** argv) {
 	}
 
 	//finish
-RET:
 	return 0;
 }
 
