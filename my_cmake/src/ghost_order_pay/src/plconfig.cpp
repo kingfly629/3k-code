@@ -51,7 +51,7 @@ namespace kkk {
 		v["server"] = server;
 		v["user"] = user;
 		v["db"] = db;
-		v["passwd"] = passwd;
+		v["password"] = password;
 		v["charset"] = charset;
 
 		return 0;

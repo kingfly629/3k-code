@@ -112,12 +112,12 @@ int main(int argc, char** argv) {
 
 		//业务逻辑处理 todo here
 		auto_ptr<CMysqlWrapper> mysql = auto_ptr<CMysqlWrapper>
-				(new CMysqlWrapper(conf.server, conf.user, conf.passwd, conf.db, conf.charset));
+				(new CMysqlWrapper(conf.server, conf.user, conf.password, conf.db, conf.charset));
 		std::string sTable = "orders";
 		std::string sSelects = "order_id,order_status";
 		std::string sCondition = "channel_id = 'ghost' and order_status = 100 and substring(order_time,1,10) = ";
 		std::string order_by = "appoint_time";
-		std::string limit = "2";
+		int limit = 2;
 		sCondition.append("'");
 		sCondition.append(time);
 		sCondition.append("'");
