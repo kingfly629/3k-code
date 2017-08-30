@@ -13,29 +13,32 @@
 #include <vector>
 
 namespace kkk {
-class CMysqlWrapper {
-public:
-	CMysqlWrapper();
-	//CMysqlWrapper(const CMysqlWrapper& orig);
-	virtual ~CMysqlWrapper();
-	void Query(const std::string &sql);
-	void Query(const std::string &sTable, const std::string &sCondition,
-		const std::string &sSelects, const std::string &order_by = "", int limit = 1);
-	void PrintInfo() const;
-	void Update(const std::string & sql);
-	void Delete(const std::string & sql);
-	void Insert(const std::string & sql);
-private:
-	/*std::string passwd;
-	std::string user;
-	std::string db;
-	std::string server;*/
-	std::string select;
-	mysqlpp::Connection conn;
-	//mysqlpp::Query query;
-	mysqlpp::StoreQueryResult res;
-	std::vector<std::string> v_fields;
-};
+
+	class CMysqlWrapper {
+	public:
+		CMysqlWrapper();
+		CMysqlWrapper(const std::string &server, const std::string &user,
+				const std::string &passwd, const std::string &db, const std::string charset);
+		//CMysqlWrapper(const CMysqlWrapper& orig);
+		virtual ~CMysqlWrapper();
+		void Query(const std::string &sql);
+		void Query(const std::string &sTable, const std::string &sCondition,
+				const std::string &sSelects, const std::string &order_by = "", int limit = 1);
+		void PrintInfo() const;
+		void Update(const std::string & sql);
+		void Delete(const std::string & sql);
+		void Insert(const std::string & sql);
+	private:
+		/*std::string passwd;
+		std::string user;
+		std::string db;
+		std::string server;*/
+		std::string select;
+		mysqlpp::Connection conn;
+		//mysqlpp::Query query;
+		mysqlpp::StoreQueryResult res;
+		std::vector<std::string> v_fields;
+	};
 }
 
 #endif /* MYSQL_WRAPPER_H */

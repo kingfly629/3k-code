@@ -80,9 +80,9 @@ void CMysqlWrapper::PrintInfo() const {
 				for (int k = 0; k < v_fields.size(); ++k) {
 					cout << setw(9) << res[i][v_fields[k]] << ' ';
 				}
-			    cout << endl;
+				cout << endl;
 			}*/
-			
+
 		}
 	}
 
