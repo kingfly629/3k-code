@@ -13,9 +13,9 @@ namespace kkk {
 			const std::string &passwd, const std::string &db, const std::string charset)
 	: conn(false), res(false) {
 		if (conn.connect(db, server, user, passwd)) {
-			cout << "connect db succeed. " << endl;
+			std::cout << "connect db succeed. " << std::endl;
 		} else {
-			cout << "connect db fail. " << endl;
+			std::cout << "connect db fail. " << std::endl;
 		}
 		v_fields.clear();
 	}
@@ -23,8 +23,8 @@ namespace kkk {
 	CMysqlWrapper::~CMysqlWrapper() {
 	}
 
-	void CMysqlWrapper::Query(const std::string & sql) {
-		mysqlpp::Query query = conn.query($sql);
+	void CMysqlWrapper::Query(const std::string &sql) {
+		mysqlpp::Query query = conn.query(sql);
 		res = query.store();
 	}
 
@@ -36,53 +36,53 @@ namespace kkk {
 			sql += " order by " + order_by;
 		}
 		sql += " limit " + limit;
-		mysqlpp::Query query = conn.query($sql);
+		mysqlpp::Query query = conn.query(sql);
 		res = query.store();
 	}
 
-	void CMysqlWrapper::Insert(const std::string & sql) {
-		mysqlpp::Query query = conn.query($sql);
+	void CMysqlWrapper::Insert(const std::string &sql) {
+		mysqlpp::Query query = conn.query(sql);
 		res = query.store();
 	}
 
-	void CMysqlWrapper::Update(const std::string & sql) {
-		mysqlpp::Query query = conn.query($sql);
+	void CMysqlWrapper::Update(const std::string &sql) {
+		mysqlpp::Query query = conn.query(sql);
 		res = query.store();
 	}
 
-	void CMysqlWrapper::Delete(const std::string & sql) {
-		mysqlpp::Query query = conn.query($sql);
+	void CMysqlWrapper::Delete(const std::string &sql) {
+		mysqlpp::Query query = conn.query(sql);
 		res = query.store();
 	}
 
 	void CMysqlWrapper::PrintInfo() const {
 		if (res) {
 			if (0 != select.compare("*")) {
-				cout.setf(ios::left);
+				std::cout.setf(ios::left);
 				char delims[] = "#";
 				char *result = NULL;
 				result = strtok(select.c_str(), delims);
 				while (result != NULL) {
 					v_fields.push_back(result);
-					cout << setw(10) << result;
+					std::cout << std::setw(10) << result;
 					result = strtok(NULL, delims);
 				}
-				cout << endl;
+				std::cout << std::endl;
 
 				mysqlpp::StoreQueryResult::const_iterator it;
 				for (it = res.begin(); it != res.end(); ++it) {
 					mysqlpp::Row row = *it;
 					for (int k = 0; k < v_fields.size(); ++k) {
-						cout << setw(9) << row[v_fields[k]] << ' ';
+						std::cout << std::setw(9) << row[v_fields[k].c_str()] << ' ';
 					}
-					cout << endl;
+					std::cout << std::endl;
 				}
 
 				/*for (size_t i = 0; i < res.num_rows(); ++i) {
 					for (int k = 0; k < v_fields.size(); ++k) {
-						cout << setw(9) << res[i][v_fields[k]] << ' ';
+						std::cout << std::setw(9) << res[i][v_fields[k].c_str()] << ' ';
 					}
-					cout << endl;
+					std::cout << std::endl;
 				}*/
 
 			}
