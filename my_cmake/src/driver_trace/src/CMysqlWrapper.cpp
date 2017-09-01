@@ -29,7 +29,7 @@ namespace kkk {
 	}
 
 	void CMysqlWrapper::Query(const std::string &sTable, const std::string &sCondition,
-			const std::string &sSelects, const std::string &order_by, int limit) {
+			std::string &sSelects, const std::string &order_by, int limit) {
 		select.clear();
 		select.swap(sSelects);
 		std::string sql = "select " + select + " from " + sTable + " where " + sCondition;
@@ -62,15 +62,15 @@ namespace kkk {
 				std::cout.setf(std::ios::left);
 				char delims[] = "#";
 				char *result = NULL;
-				result = const_cast<char*> (strtok(select.c_str(), delims);
+				result = strtok(select.c_str(), delims);
 				while (result != NULL) {
 					v_fields.push_back(result);
-							std::cout << std::setw(10) << result;
-							result = const_cast<char*> (strtok(NULL, delims);
+					std::cout << std::setw(10) << result;
+					result = strtok(NULL, delims);
 				}
 				std::cout << std::endl;
 
-						mysqlpp::StoreQueryResult::const_iterator it;
+				mysqlpp::StoreQueryResult::const_iterator it;
 				for (it = res.begin(); it != res.end(); ++it) {
 					mysqlpp::Row row = *it;
 					for (int k = 0; k < v_fields.size(); ++k) {
