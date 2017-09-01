@@ -39,10 +39,6 @@ static void printHelpInfo() {
 			<< std::endl;
 }
 
-static int loadCfgData(PLConfig &conf, const std::string &cfg_file) {
-	return conf.init(cfg_file);
-}
-
 int main(int argc, char** argv) {
 	//异常处理机制
 	try {
@@ -77,7 +73,7 @@ int main(int argc, char** argv) {
 				case 't':
 					time = optarg;
 					break;
-				case 'sql':
+				case "sql":
 					sql = optarg;
 					break;
 				default:
@@ -117,7 +113,7 @@ int main(int argc, char** argv) {
 		//业务逻辑处理 todo here
 		auto_ptr<CMysqlWrapper> mysql = auto_ptr<CMysqlWrapper>
 				(new CMysqlWrapper(conf.server, conf.user, conf.password, conf.db, conf.charset));
-		std::string sTable = "orders";
+		/*std::string sTable = "orders";
 		std::string sSelects = "order_id,order_status";
 		std::string sCondition = "channel_id = 'ghost' and order_status = 100 and substring(order_time,1,10) = ";
 		std::string order_by = "appoint_time";
@@ -125,7 +121,7 @@ int main(int argc, char** argv) {
 		sCondition.append("'");
 		sCondition.append(time);
 		sCondition.append("'");
-		//mysql->Query(sTable, sCondition, sSelects, order_by, limit);
+		mysql->Query(sTable, sCondition, sSelects, order_by, limit);*/
 		/*std::string sql = "select d.uid from driver d,car c where LENGTH(c.car_number) = 9"
 				" and c.car_number LIKE '%闽ET%'"
 				" AND c.imei IS NOT NULL"

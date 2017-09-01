@@ -12,7 +12,7 @@ namespace kkk {
 	CMysqlWrapper::CMysqlWrapper(const std::string &server, const std::string &user,
 			const std::string &passwd, const std::string &db, const std::string charset)
 	: conn(false) {
-		if (conn.connect(db, server, user, passwd)) {
+		if (conn.connect(db.c_str(), server.c_str(), user.c_str(), passwd.c_str())) {
 			std::cout << "connect db succeed. " << std::endl;
 		} else {
 			std::cout << "connect db fail. " << std::endl;
@@ -30,6 +30,7 @@ namespace kkk {
 
 	void CMysqlWrapper::Query(const std::string &sTable, const std::string &sCondition,
 			const std::string &sSelects, const std::string &order_by, int limit) {
+		select.clear();
 		select.swap(sSelects);
 		std::string sql = "select " + select + " from " + sTable + " where " + sCondition;
 		if (!order_by.length()) {

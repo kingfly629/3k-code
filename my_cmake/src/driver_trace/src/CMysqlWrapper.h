@@ -18,7 +18,8 @@ namespace kkk {
 	class CMysqlWrapper {
 	public:
 		CMysqlWrapper();
-		CMysqlWrapper(const std::string &server, const std::string &user, const std::string &passwd, const std::string &db, const std::string charset);
+		CMysqlWrapper(const std::string &server, const std::string &user, 
+		const std::string &passwd, const std::string &db, const std::string charset);
 		//CMysqlWrapper(const CMysqlWrapper& orig);
 		virtual ~CMysqlWrapper();
 		void Query(const std::string &sql);
@@ -29,9 +30,8 @@ namespace kkk {
 		void Delete(const std::string & sql);
 		void Insert(const std::string & sql);
 	private:
-		std::string sql;
+		std::string select;
 		mysqlpp::Connection conn;
-		//mysqlpp::Query query;
 		mysqlpp::StoreQueryResult res;
 		std::vector<std::string> v_fields;
 	};
