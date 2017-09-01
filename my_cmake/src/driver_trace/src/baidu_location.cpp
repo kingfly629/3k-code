@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
 				case 't':
 					time = optarg;
 					break;
-				case "sql":
+				case 's':
 					sql = optarg;
 					break;
 				default:
