@@ -56,7 +56,7 @@ namespace kkk {
 		res = query.store();
 	}
 
-	void CMysqlWrapper::PrintInfo() const {
+	void CMysqlWrapper::PrintInfo() {
 		if (res) {
 			if (0 != select.compare("*")) {
 				std::cout.setf(std::ios::left);
@@ -64,7 +64,7 @@ namespace kkk {
 				char *result = NULL;
 				result = strtok(dynamic_cast<char *>select.c_str(), delims);
 				while (result != NULL) {
-					v_fields.push_back(std::string(result));
+					v_fields.push_back(result);
 					std::cout << std::setw(10) << result;
 					result = strtok(NULL, delims);
 				}
