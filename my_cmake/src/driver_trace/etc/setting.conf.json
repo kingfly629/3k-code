@@ -1,0 +1,8 @@
+{
+    "host": "bbx-testdb.mysql.rds.aliyuncs.com",
+    "user": "bbx_root",
+    "password": "LHBbx#2017@15",
+    "database": "bbx_test",
+    "port": "3306",
+    "charset": "utf8"
+}
