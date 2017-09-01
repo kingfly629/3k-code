@@ -1,12 +1,11 @@
 #include "plconfig.h"
-#include <fstream>
 
 namespace kkk {
 
 	int PLConfig::init(const std::string& f) {
 		int ret = 0;
-		fstream ifs;
-		ifs.open(f.data(), ios::in);
+		std::fstream ifs;
+		ifs.open(f.data(), std::ios::in);
 		if (!ifs.is_open()) {
 			return -1;
 		}
@@ -57,7 +56,7 @@ namespace kkk {
 		return 0;
 	}
 
-	string PLConfig::toStyledString() const {
+	std::string PLConfig::toStyledString() const {
 		Json::Value v;
 		serializeToJson(v);
 		return v.toStyledString();

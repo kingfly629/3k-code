@@ -62,7 +62,7 @@ namespace kkk {
 				std::cout.setf(std::ios::left);
 				char delims[] = "#";
 				char *result = NULL;
-				result = strtok(dynamic_cast<char *>select.c_str(), delims);
+				result = strtok((char *)select.c_str(), delims);
 				while (result != NULL) {
 					v_fields.push_back(result);
 					std::cout << std::setw(10) << result;
