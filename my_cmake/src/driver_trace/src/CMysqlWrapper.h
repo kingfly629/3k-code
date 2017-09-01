@@ -8,8 +8,8 @@
 #ifndef MYSQL_WRAPPER_H
 #define MYSQL_WRAPPER_H
 
-#include "mysql++.h"
 #include "mysql++/mysql++.h"
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -18,7 +18,7 @@ namespace kkk {
 	class CMysqlWrapper {
 	public:
 		CMysqlWrapper();
-		CMysqlWrapper(const std::string &server, const std::string &user,const std::string &passwd, const std::string &db, const std::string charset);
+		CMysqlWrapper(const std::string &server, const std::string &user, const std::string &passwd, const std::string &db, const std::string charset);
 		//CMysqlWrapper(const CMysqlWrapper& orig);
 		virtual ~CMysqlWrapper();
 		void Query(const std::string &sql);
@@ -29,11 +29,7 @@ namespace kkk {
 		void Delete(const std::string & sql);
 		void Insert(const std::string & sql);
 	private:
-		/*std::string passwd;
-		std::string user;
-		std::string db;
-		std::string server;*/
-		std::string select;
+		std::string sql;
 		mysqlpp::Connection conn;
 		//mysqlpp::Query query;
 		mysqlpp::StoreQueryResult res;

@@ -59,6 +59,7 @@ int main(int argc, char** argv) {
 		std::string type;
 		std::string config;
 		std::string time;
+		std::string sql;
 		bool daemon = false;
 
 		//参数处理
@@ -75,6 +76,9 @@ int main(int argc, char** argv) {
 					break;
 				case 't':
 					time = optarg;
+					break;
+				case 'sql':
+					sql = optarg;
 					break;
 				default:
 					break;
@@ -121,7 +125,15 @@ int main(int argc, char** argv) {
 		sCondition.append("'");
 		sCondition.append(time);
 		sCondition.append("'");
-		mysql->Query(sTable, sCondition, sSelects, order_by, limit);
+		//mysql->Query(sTable, sCondition, sSelects, order_by, limit);
+		/*std::string sql = "select d.uid from driver d,car c where LENGTH(c.car_number) = 9"
+				" and c.car_number LIKE '%闽ET%'"
+				" AND c.imei IS NOT NULL"
+				" AND c.imei <> ''"
+				" AND d.status <> - 200"
+				" AND LENGTH(d.driver_licence) = 18"
+				" AND d.car_number = c.car_number";*/
+		mysql->Query(sql);
 		mysql->PrintInfo();
 		//2-循环每一笔订单，调用订单接口完成线下支付
 		//		while (g_run) {

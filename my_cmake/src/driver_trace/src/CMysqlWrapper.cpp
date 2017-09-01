@@ -11,7 +11,7 @@ namespace kkk {
 
 	CMysqlWrapper::CMysqlWrapper(const std::string &server, const std::string &user,
 			const std::string &passwd, const std::string &db, const std::string charset)
-	: conn(false), res(false) {
+	: conn(false) {
 		if (conn.connect(db, server, user, passwd)) {
 			std::cout << "connect db succeed. " << std::endl;
 		} else {
@@ -58,18 +58,18 @@ namespace kkk {
 	void CMysqlWrapper::PrintInfo() const {
 		if (res) {
 			if (0 != select.compare("*")) {
-				std::cout.setf(ios::left);
+				std::cout.setf(std::ios::left);
 				char delims[] = "#";
 				char *result = NULL;
-				result = strtok(select.c_str(), delims);
+				result = const_cast<char*> (strtok(select.c_str(), delims);
 				while (result != NULL) {
 					v_fields.push_back(result);
-					std::cout << std::setw(10) << result;
-					result = strtok(NULL, delims);
+							std::cout << std::setw(10) << result;
+							result = const_cast<char*> (strtok(NULL, delims);
 				}
 				std::cout << std::endl;
 
-				mysqlpp::StoreQueryResult::const_iterator it;
+						mysqlpp::StoreQueryResult::const_iterator it;
 				for (it = res.begin(); it != res.end(); ++it) {
 					mysqlpp::Row row = *it;
 					for (int k = 0; k < v_fields.size(); ++k) {
@@ -88,3 +88,5 @@ namespace kkk {
 			}
 		}
 	}
+
+}
