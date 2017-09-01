@@ -23,33 +23,37 @@ namespace kkk {
 
 	int PLConfig::parseFromJson(const Json::Value& root) {
 		int ret = 0;
-		if (root["server"].isString()) {
-			server = root["server"].asString();
+		if (root["host"].isString()) {
+			host = root["host"].asString();
 		}
 		
 		if (root["user"].isString()) {
-			server = root["user"].asString();
+			user = root["user"].asString();
 		}
 		
 		if (root["password"].isString()) {
-			server = root["password"].asString();
+			password = root["password"].asString();
 		}
 		
-		if (root["db"].isString()) {
-			server = root["db"].asString();
+		if (root["database"].isString()) {
+			database = root["database"].asString();
+		}
+		
+		if (root["port"].isInt()) {
+			port = root["port"].asInt();
 		}
 		
 		if (root["charset"].isString()) {
-			server = root["charset"].asString();
+			charset = root["charset"].asString();
 		}
 
 		return ret;
 	}
 
 	int PLConfig::serializeToJson(Json::Value& v) const {
-		v["server"] = server;
+		v["host"] = host;
 		v["user"] = user;
-		v["db"] = db;
+		v["database"] = database;
 		v["password"] = password;
 		v["charset"] = charset;
 

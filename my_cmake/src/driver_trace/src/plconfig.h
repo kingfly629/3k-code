@@ -8,10 +8,11 @@
 
 namespace kkk {
 	struct PLConfig {
-		std::string server;
+		std::string host;
 		std::string user;
 		std::string password;
-		std::string db;
+		std::string database;
+		int port;
 		std::string charset;
 
 		int init(const std::string& f);

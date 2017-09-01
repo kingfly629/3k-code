@@ -9,10 +9,10 @@
 
 namespace kkk {
 
-	CMysqlWrapper::CMysqlWrapper(const std::string &server, const std::string &user,
-			const std::string &passwd, const std::string &db, const std::string charset)
+	CMysqlWrapper::CMysqlWrapper(const std::string &host, const std::string &user,
+			const std::string &passwd, const std::string &db, const std::string charset, int port)
 	: conn(false) {
-		if (conn.connect(db.c_str(), server.c_str(), user.c_str(), passwd.c_str())) {
+		if (conn.connect(db.c_str(), host.c_str(), user.c_str(), passwd.c_str(), port)) {
 			std::cout << "connect db succeed. " << std::endl;
 		} else {
 			std::cout << "connect db fail. " << std::endl;
@@ -62,7 +62,7 @@ namespace kkk {
 				std::cout.setf(std::ios::left);
 				char delims[] = "#";
 				char *result = NULL;
-				result = strtok((char *)select.c_str(), delims);
+				result = strtok((char *) select.c_str(), delims);
 				while (result != NULL) {
 					v_fields.push_back(result);
 					std::cout << std::setw(10) << result;
