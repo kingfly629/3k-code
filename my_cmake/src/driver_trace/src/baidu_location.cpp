@@ -48,6 +48,7 @@ int main(int argc, char** argv) {
 			{ "help", 0, NULL, 'h'},
 			{ "daemon", 0, NULL, 'd'},
 			{ "config", 1, NULL, 'c'},
+			{ "sql", 2, NULL, 's'},
 			{ NULL, 0, NULL, 0}
 		};
 
@@ -69,9 +70,6 @@ int main(int argc, char** argv) {
 					break;
 				case 'c':
 					config = optarg;
-					break;
-				case 't':
-					time = optarg;
 					break;
 				case 's':
 					sql = optarg;
