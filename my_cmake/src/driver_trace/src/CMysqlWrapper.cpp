@@ -81,13 +81,12 @@ namespace kkk {
 					std::cout << std::endl;
 				}
 			} else {
-
-				for (size_t j = 0; j < res.num_rows(); ++j)) {
-						for (int k = 0; k < num_fields; ++k) {
-							std::cout << '\t' << res[j][k] << ' ';
-						}
-						std::cout << std::endl;
+				for (size_t j = 0; j < res.num_rows(); ++j) {
+					for (int k = 0; k < num_fields; ++k) {
+						std::cout << '\t' << res[j][k] << ' ';
 					}
+					std::cout << std::endl;
+				}
 			}
 
 		}
