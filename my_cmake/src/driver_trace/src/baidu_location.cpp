@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <string>
 #include <memory>
 #include <stdlib.h>
 #include <signal.h>
