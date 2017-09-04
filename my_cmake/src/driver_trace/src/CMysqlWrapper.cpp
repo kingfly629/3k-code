@@ -24,6 +24,7 @@ namespace kkk {
 	}
 
 	void CMysqlWrapper::Query(const std::string &sql) {
+		select = "*";
 		mysqlpp::Query query = conn.query(sql);
 		res = query.store();
 	}
@@ -58,6 +59,7 @@ namespace kkk {
 
 	void CMysqlWrapper::PrintInfo() {
 		if (res) {
+			int num_fields = res.num_fields();
 			if (0 != select.compare("*")) {
 				std::cout.setf(std::ios::left);
 				char delims[] = "#";
@@ -78,15 +80,16 @@ namespace kkk {
 					}
 					std::cout << std::endl;
 				}
+			} else {
 
-				/*for (size_t i = 0; i < res.num_rows(); ++i) {
-					for (int k = 0; k < v_fields.size(); ++k) {
-						std::cout << std::setw(9) << res[i][v_fields[k].c_str()] << ' ';
+				for (size_t j = 0; j < res.num_rows(); ++j)) {
+						for (int k = 0; k < num_fields; ++k) {
+							std::cout << '\t' << res[j][k] << ' ';
+						}
+						std::cout << std::endl;
 					}
-					std::cout << std::endl;
-				}*/
-
 			}
+
 		}
 	}
 
