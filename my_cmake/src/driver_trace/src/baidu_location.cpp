@@ -34,16 +34,17 @@ static void signal_handler(int sig) {
 }
 
 static void printHelpInfo() {
-	std::cout << "-h                          help\n"
+	std::cout << "-h                        help\n"
 			"-d                             daemon\n"
 			"-c     <config>                config\n"
+			"-s     <sql>					sql\n"
 			<< std::endl;
 }
 
 int main(int argc, char** argv) {
 	//异常处理机制
 	try {
-		const char* short_options = "hdc";
+		const char* short_options = "hdc:s::";
 
 		const struct option long_options[] = {
 			{ "help", 0, NULL, 'h'},
