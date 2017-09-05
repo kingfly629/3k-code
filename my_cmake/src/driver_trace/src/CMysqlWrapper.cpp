@@ -69,7 +69,7 @@ namespace kkk {
 		std::cout << sTmp << std::endl;
 	}
 
-	void CMysqlWrapper::PrintInfo(char* key) {
+	void CMysqlWrapper::PrintInfo(std::string key) {
 		if (res) {
 			int num_fields = res.num_fields();
 			v_fields.clear();
@@ -99,7 +99,7 @@ namespace kkk {
 					for (int k = 0; k < num_fields; ++k) {
 						std::cout << res[j][k] << '\t';
 					}
-					v_result.push_back(std::string(res[j][key]));
+					v_result.push_back(std::string(res[j][key.c_str()]));
 					std::cout << std::endl;
 				}
 			}
