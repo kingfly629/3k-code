@@ -57,9 +57,21 @@ namespace kkk {
 		res = query.store();
 	}
 
+	void CMysqlWrapper::DebugResult() {
+		std::string sTmp;
+		std::vector<std::string>::iterator iter = v_result.begin();
+		for (; iter != v_result.end(); ++iter) {
+			sTmp.append(*iter);
+			sTmp.append(",");
+		}
+		std::cout << sTmp << std::endl;
+	}
+
 	void CMysqlWrapper::PrintInfo() {
 		if (res) {
 			int num_fields = res.num_fields();
+			v_fields.clear();
+			v_result.clear();
 			if (0 != select.compare("*")) {
 				std::cout.setf(std::ios::left);
 				char delims[] = "#";
@@ -83,8 +95,9 @@ namespace kkk {
 			} else {
 				for (size_t j = 0; j < res.num_rows(); ++j) {
 					for (int k = 0; k < num_fields; ++k) {
-						std::cout << '\t' << res[j][k] << ' ';
+						std::cout << res[j][k] << '\t';
 					}
+					v_result.push_back(res[j]['uid']);
 					std::cout << std::endl;
 				}
 			}

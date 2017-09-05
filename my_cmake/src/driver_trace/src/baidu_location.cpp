@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <getopt.h>
+#include <unistd.h>
 #include "CMysqlWrapper.h"
 #include "http_client_syn.h"
 #include "plconfig.h"
@@ -18,6 +19,29 @@ using namespace std;
 using namespace kkk;
 
 int g_run = true;
+
+void daemonize() {
+	// clear file creation mask
+	umask(0);
+
+	// fork child
+	pid_t pid = fork();
+
+	if (pid < 0) {
+		exit(-1);
+	} else if (pid > 0) {
+		exit(0);
+	}
+
+	setsid();
+	close(0);
+	close(1);
+	close(2);
+
+	int fd0 = open("/dev/null", O_RDWR);
+	int fd1 = dup(fd0);
+	int fd2 = dup(fd0);
+}
 
 static int system_shutdown(void) {
 	g_run = false;
@@ -98,9 +122,9 @@ int main(int argc, char** argv) {
 		signal(SIGURG, SIG_IGN);
 		signal(SIGTERM, signal_handler);
 
-		//		if (daemon) {
-		//			ef::daemonize();
-		//		}
+		if (daemon) {
+			daemonize();
+		}
 
 		//加载配置文件：订单接口地址等
 		PLConfig conf;
@@ -122,15 +146,18 @@ int main(int argc, char** argv) {
 		sCondition.append(time);
 		sCondition.append("'");
 		mysql->Query(sTable, sCondition, sSelects, order_by, limit);*/
-		/*std::string sql = "select d.uid from driver d,car c where LENGTH(c.car_number) = 9"
+		sql = "select d.uid,d.car_number from driver d,car c where LENGTH(c.car_number) = 9"
 				" and c.car_number LIKE '%闽ET%'"
 				" AND c.imei IS NOT NULL"
 				" AND c.imei <> ''"
 				" AND d.status <> - 200"
 				" AND LENGTH(d.driver_licence) = 18"
-				" AND d.car_number = c.car_number";*/
+				" AND d.car_number = c.car_number"
+				" LIMIT 0,2";
 		mysql->Query(sql);
 		mysql->PrintInfo();
+		mysql->DebugResult();
+
 		//2-循环每一笔订单，调用订单接口完成线下支付
 		//		while (g_run) {
 		//			
