@@ -25,7 +25,7 @@ namespace kkk {
 		void Query(const std::string &sql);
 		void Query(const std::string &sTable, const std::string &sCondition,
 				std::string &sSelects, const std::string &order_by = "", int limit = 1);
-		void PrintInfo();
+		void PrintInfo(char* key = "");
 		void DebugResult();
 		void Update(const std::string & sql);
 		void Delete(const std::string & sql);

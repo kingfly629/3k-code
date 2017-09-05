@@ -58,21 +58,23 @@ namespace kkk {
 	}
 
 	void CMysqlWrapper::DebugResult() {
-		std::string sTmp;
+		std::string sTmp = "('";
 		std::vector<std::string>::iterator iter = v_result.begin();
 		for (; iter != v_result.end(); ++iter) {
 			sTmp.append(*iter);
-			sTmp.append(",");
+			sTmp.append("','");
 		}
+		sTmp = sTmp.substr(0, sTmp.length() - 2);
+		sTmp.append(")");
 		std::cout << sTmp << std::endl;
 	}
 
-	void CMysqlWrapper::PrintInfo() {
+	void CMysqlWrapper::PrintInfo(char* key) {
 		if (res) {
 			int num_fields = res.num_fields();
 			v_fields.clear();
 			v_result.clear();
-			if (0 != select.compare("*")) {
+			if (0 != select.compare("*") && key.empty()) {
 				std::cout.setf(std::ios::left);
 				char delims[] = "#";
 				char *result = NULL;
@@ -97,7 +99,7 @@ namespace kkk {
 					for (int k = 0; k < num_fields; ++k) {
 						std::cout << res[j][k] << '\t';
 					}
-					v_result.push_back(std::string(res[j]["uid"]));
+					v_result.push_back(std::string(res[j][key]));
 					std::cout << std::endl;
 				}
 			}

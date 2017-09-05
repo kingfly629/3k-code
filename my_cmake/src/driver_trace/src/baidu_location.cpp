@@ -158,7 +158,7 @@ int main(int argc, char** argv) {
 				" AND d.car_number = c.car_number"
 				" LIMIT 0,2";
 		mysql->Query(sql);
-		mysql->PrintInfo();
+		mysql->PrintInfo("uid");
 		mysql->DebugResult();
 
 		//2-循环每一笔订单，调用订单接口完成线下支付
