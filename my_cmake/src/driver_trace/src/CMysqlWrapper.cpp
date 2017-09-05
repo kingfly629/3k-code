@@ -97,7 +97,7 @@ namespace kkk {
 					for (int k = 0; k < num_fields; ++k) {
 						std::cout << res[j][k] << '\t';
 					}
-					v_result.push_back(res[j]['uid']);
+					v_result.push_back(std::string(res[j]["uid"]));
 					std::cout << std::endl;
 				}
 			}
