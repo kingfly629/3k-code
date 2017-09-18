@@ -11,11 +11,14 @@
  * Created on 2017年9月18日, 下午2:13
  */
 
+#include <stdlib.h>
+#include <iostream>
+#include <signal.h>
+#include <getopt.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <stdlib.h>
 #include <string.h>
 #include <errno.h>
 
@@ -65,7 +68,6 @@ static void printHelpInfo() {
 }
 
 int main(int argc, char** argv) {
-
 	const char* short_options = "hd";
 	const struct option long_options[] = {
 		{ "help", 0, NULL, 'h'},
