@@ -56,6 +56,11 @@ static void signal_handler(int sig) {
 
 	switch (sig) {
 		case SIGTERM:
+			std::cout << "catch SIGTERM...\n";
+			system_shutdown();
+			break;
+			case SIGHUP:
+				std::cout << "catch SIGHUP...\n";
 			system_shutdown();
 			break;
 	}
