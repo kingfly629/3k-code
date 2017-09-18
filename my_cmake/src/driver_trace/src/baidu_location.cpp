@@ -130,16 +130,16 @@ int main(int argc, char** argv) {
 		}
 
 		//加载配置文件：订单接口地址等
-		PLConfig conf;
+		PLConfig conf_zs;
 		int ret = 0;
-		if ((ret = conf.init(config)) < 0) {
+		if ((ret = conf_zs.init(config)) < 0) {
 			//goto RET;
 			return -1;
 		}
 
-		//业务逻辑处理 todo here
-		auto_ptr<CMysqlWrapper> mysql = auto_ptr<CMysqlWrapper>
-				(new CMysqlWrapper(conf.host, conf.user, conf.password, conf.database, conf.charset, conf.port));
+		//1 valid driver
+		auto_ptr<CMysqlWrapper> mysql_zs = auto_ptr<CMysqlWrapper>
+				(new CMysqlWrapper(conf_zs.host, conf_zs.user, conf_zs.password, conf_zs.database, conf_zs.charset, conf_zs.port));
 		/*std::string sTable = "orders";
 		std::string sSelects = "order_id,order_status";
 		std::string sCondition = "channel_id = 'ghost' and order_status = 100 and substring(order_time,1,10) = ";
@@ -148,23 +148,21 @@ int main(int argc, char** argv) {
 		sCondition.append("'");
 		sCondition.append(time);
 		sCondition.append("'");
-		mysql->Query(sTable, sCondition, sSelects, order_by, limit);*/
+		mysql_zs->Query(sTable, sCondition, sSelects, order_by, limit);*/
 		sql = "select d.uid,d.car_number from driver d,car c where LENGTH(c.car_number) = 9"
-				" and c.car_number LIKE '%闽ET%'"
+				" and c.car_number LIKE '%ET%'"
 				" AND c.imei IS NOT NULL"
 				" AND c.imei <> ''"
 				" AND d.status <> - 200"
 				" AND LENGTH(d.driver_licence) = 18"
 				" AND d.car_number = c.car_number"
 				" LIMIT 0,2";
-		mysql->Query(sql);
-		mysql->PrintInfo("uid");
-		mysql->DebugResult();
+		mysql_zs->query(sql);
+		std::string sResult = mysql_zs->getResult("uid");
 
-		//2-循环每一笔订单，调用订单接口完成线下支付
-		//		while (g_run) {
-		//			
-		//		}
+		//2 司机轨迹
+		auto_ptr<CMysqlWrapper> mysql_trace = auto_ptr<CMysqlWrapper>
+				(new CMysqlWrapper(conf_zs.host, conf_zs.user, conf_zs.password, conf_zs.database, conf_zs.charset, conf_zs.port));
 
 	} catch (const std::exception &ex) {
 		std::cerr << "catch Exception: " << ex.what() << std::endl;

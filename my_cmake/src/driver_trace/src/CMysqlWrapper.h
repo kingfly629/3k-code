@@ -22,14 +22,14 @@ namespace kkk {
 				const std::string &passwd, const std::string &db, const std::string charset, int port);
 		//CMysqlWrapper(const CMysqlWrapper& orig);
 		virtual ~CMysqlWrapper();
-		void Query(const std::string &sql);
-		void Query(const std::string &sTable, const std::string &sCondition,
+		void query(const std::string &sql);
+		void query(const std::string &sTable, const std::string &sCondition,
 				std::string &sSelects, const std::string &order_by = "", int limit = 1);
-		void PrintInfo(std::string key = "");
-		void DebugResult();
-		void Update(const std::string & sql);
+		void printInfo();
+		std::string getResult(std::string key = "");
+		void update(const std::string & sql);
 		void Delete(const std::string & sql);
-		void Insert(const std::string & sql);
+		void insert(const std::string & sql);
 	private:
 		std::string select;
 		mysqlpp::Connection conn;

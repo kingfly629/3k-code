@@ -23,13 +23,13 @@ namespace kkk {
 	CMysqlWrapper::~CMysqlWrapper() {
 	}
 
-	void CMysqlWrapper::Query(const std::string &sql) {
+	void CMysqlWrapper::query(const std::string &sql) {
 		select = "*";
 		mysqlpp::Query query = conn.query(sql);
 		res = query.store();
 	}
 
-	void CMysqlWrapper::Query(const std::string &sTable, const std::string &sCondition,
+	void CMysqlWrapper::query(const std::string &sTable, const std::string &sCondition,
 			std::string &sSelects, const std::string &order_by, int limit) {
 		select.clear();
 		select.swap(sSelects);
@@ -42,12 +42,12 @@ namespace kkk {
 		res = query.store();
 	}
 
-	void CMysqlWrapper::Insert(const std::string &sql) {
+	void CMysqlWrapper::insert(const std::string &sql) {
 		mysqlpp::Query query = conn.query(sql);
 		res = query.store();
 	}
 
-	void CMysqlWrapper::Update(const std::string &sql) {
+	void CMysqlWrapper::update(const std::string &sql) {
 		mysqlpp::Query query = conn.query(sql);
 		res = query.store();
 	}
@@ -57,19 +57,47 @@ namespace kkk {
 		res = query.store();
 	}
 
-	void CMysqlWrapper::DebugResult() {
-		std::string sTmp = "('";
-		std::vector<std::string>::iterator iter = v_result.begin();
-		for (; iter != v_result.end(); ++iter) {
-			sTmp.append(*iter);
-			sTmp.append("','");
-		}
-		sTmp = sTmp.substr(0, sTmp.length() - 2);
-		sTmp.append(")");
-		std::cout << sTmp << std::endl;
+	std::string CMysqlWrapper::getResult() {
+
 	}
 
-	void CMysqlWrapper::PrintInfo(std::string key) {
+	void CMysqlWrapper::printInfo() {
+		if (res) {
+			int num_fields = res.num_fields();
+			v_fields.clear();
+			v_result.clear();
+			if (0 != select.compare("*")) {
+				std::cout.setf(std::ios::left);
+				char delims[] = "#";
+				char *result = NULL;
+				result = strtok((char *) select.c_str(), delims);
+				while (result != NULL) {
+					v_fields.push_back(result);
+					std::cout << std::setw(10) << result;
+					result = strtok(NULL, delims);
+				}
+				std::cout << std::endl;
+
+				mysqlpp::StoreQueryResult::const_iterator it;
+				for (it = res.begin(); it != res.end(); ++it) {
+					mysqlpp::Row row = *it;
+					for (int k = 0; k < v_fields.size(); ++k) {
+						std::cout << std::setw(9) << row[v_fields[k].c_str()] << ' ';
+					}
+					std::cout << std::endl;
+				}
+			} else {
+				for (size_t j = 0; j < res.num_rows(); ++j) {
+					for (int k = 0; k < num_fields; ++k) {
+						std::cout << res[j][k] << '\t';
+					}
+					std::cout << std::endl;
+				}
+			}
+		}
+	}
+
+	std::string CMysqlWrapper::getResult(std::string key) {
 		if (res) {
 			int num_fields = res.num_fields();
 			v_fields.clear();
@@ -103,8 +131,18 @@ namespace kkk {
 					std::cout << std::endl;
 				}
 			}
-
 		}
+
+		std::string sTmp = "('";
+		std::vector<std::string>::iterator iter = v_result.begin();
+		for (; iter != v_result.end(); ++iter) {
+			sTmp.append(*iter);
+			sTmp.append("','");
+		}
+		sTmp = sTmp.substr(0, sTmp.length() - 2);
+		sTmp.append(")");
+		std::cout << sTmp << std::endl;
+		return sTmp;
 	}
 
 }
